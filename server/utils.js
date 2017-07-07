@@ -3,9 +3,9 @@
 var id = 120;
 
 function generateId() {
-    var r = Math.round(Math.random()*1632960 + 46655);
+    var r = Math.round(Math.random() * 1632960 + 46655);
     r = r.toString(36).toUpperCase();
-    return id++;
+    return r
 }
-module.exports = {generateId};
+module.exports = { generateId };
 
