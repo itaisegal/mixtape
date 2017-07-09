@@ -6,10 +6,11 @@ import router from './router'
 import store from './store/store'
 import socketio from 'socket.io-client'
 import VueSocketio from 'vue-socket.io'
+import VueYouTubeEmbed from 'vue-youtube-embed'
 
 Vue.config.productionTip = false
-
-Vue.use(VueSocketio, socketio('http://localhost:3000'), store);
+Vue.use(VueYouTubeEmbed)
+Vue.use(VueSocketio, socketio('http://localhost:3000'), store,{transports: ['websocket']});
 
 /* eslint-disable no-new */
 new Vue({

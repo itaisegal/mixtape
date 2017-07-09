@@ -3,21 +3,21 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var utils = require('./utils');
 
-// var MongoClient = require('mongodb').MongoClient;
-
 var stations = {};
+
+var clientsIpAndStationMap = {}
 
 function isIdTaken(id) {
     return stations[id] != null;
 }
 
-function openStation() {
+function openStation(creator) {
     var id = utils.generateId();
     while (isIdTaken(id)) {
         id = utils.generateId();
     }
 
-    var station = { id, title: 'cool station sis' }
+    var station = { id, creator, title: 'cool station sis' }
     stations[id] = station;
     return station;
 }
@@ -30,8 +30,16 @@ function joinStation(id) {
     }
 }
 
+// send a message to the station
+// setInterval(() => {
+//     for (var id in stations) {
+//         io.to(id).emit('msg', 'hello station:' + id)
+//         io.emit('msg', 'hello all');
+//     }
+// }, 3500);
+
 io.on('connection', function (socket) {
-    console.log('a user connected');
+    console.log('a user connected from');
 
     socket.on('disconnect', function () {
         console.log('user disconnected');
@@ -39,13 +47,15 @@ io.on('connection', function (socket) {
 
     socket.on('newStation', function () {
         console.log('new station')
-        var s = openStation();
+        var s = openStation(socket.id);
+        socket.join(s.id);
         socket.emit('setStation', s);
         console.log(stations)
     });
 
     socket.on('join', function (id) {
         s = joinStation(id);
+        socket.join(id);
         socket.emit('setStation', s);
     })
 });
