@@ -31,8 +31,9 @@ export default {
     },
     created() {
         if (!this.station) {
-            const id = this.$route.params.stationId;
-            this.joinStation(id)
+            if (this.$store.state.fingerprint) {
+                this.joinStation()
+            }
         }
     },
     data() {
@@ -44,10 +45,10 @@ export default {
     },
     watch: {
         '$route'(to, from) {
-            debugger;
-            const id = to.params.stationId;
-            this.joinStation(id);
-            // this.$store.commit('setStation', null)
+            this.joinStation();
+        },
+        fingerprint() {
+            this.joinStation();
         }
     },
     sockets: {
@@ -72,8 +73,8 @@ export default {
         }
     },
     methods: {
-        joinStation(id) {
-            debugger;
+        joinStation() {
+            const id = this.$route.params.stationId;
             this.$socket.emit('join', id, this.fingerprint)
             this.stationNotFound = false;
         },
@@ -84,7 +85,6 @@ export default {
                 '&type=video' +
                 '&key=AIzaSyCpIRRrbKFuBidSqk2SJREaQPniXaap1TU' +
                 '&q=' + e.target.value;
-            console.log(url)
             fetch(url).then(results => {
                 results.json().then(data => {
                     that.searchResults = data.items;

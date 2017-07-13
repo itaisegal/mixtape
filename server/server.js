@@ -26,21 +26,16 @@ function openStation(creatorsFingerprint) {
 function joinStation(id, fingerprint) {
     console.log(`joining station id ${id} with fingerprint ${fingerprint}`)
     if (stations[id]) {
-        console.log('stations[id] exists')
-        console.log(stations[id]);
-        console.log('stations[id].users')
-        console.log(stations[id].users)
-        console.log('stations[id].users[fingerprint]')
-        console.log(stations[id].users[fingerprint])
         if (!stations[id].users[fingerprint]) {
-            console.log('yes')
             stations[id].users[fingerprint] = {}
         }
-        console.log(stations[id].users[fingerprint]);
+        for (var id in stations) {
+            console.log(stations[id]);
+        }
 
-        console.log(stations[id]);
         return stations[id]
     } else {
+        console.log('station not found')
         return null;
     }
 }
