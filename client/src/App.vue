@@ -5,8 +5,24 @@
 </template>
 
 <script>
+import Fingerprint2 from 'fingerprintjs2'
+
 export default {
-  name: 'app'
+  name: 'app',
+  created() {
+    var options = {
+      extendedJsFonts: true,
+      excludePlugins: true,
+      excludeAdBlock: true
+    };
+
+   var self = this; 
+    new Fingerprint2(options).get(function (result) {
+      console.log(result)
+      self.$store.commit('setFingerprint', result)
+    });
+
+  }
 }
 </script>
 

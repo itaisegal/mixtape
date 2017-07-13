@@ -1,8 +1,8 @@
 <template>
     <div class="hello">
         <button id="createStation" @click="createStation">Create Station</button>
-        <button id="joinStation">Join Station</button>
-        <input type="text"></input>
+        <button id="joinStation" @click="joinStation">Join Station</button>
+        <input type="text" v-model="stationId"></input>
     </div>
 </template>
 
@@ -11,7 +11,7 @@ export default {
     name: 'hello',
     data() {
         return {
-            msg: 'Welcome to Your Vue.js App'
+            stationId: ''
         }
     },
     sockets: {
@@ -25,10 +25,11 @@ export default {
     },
     methods: {
         createStation() {
-            this.$socket.emit('newStation')
+            this.$socket.emit('newStation', this.$store.state.fingerprint)
         },
-        joinStation(id) {
-            this.$router.push('/' + station.id);
+        joinStation() {
+            if (this.stationId.length === 4)
+                this.$router.push('/' + this.stationId);
         }
     }
 }
