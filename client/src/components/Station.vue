@@ -10,10 +10,10 @@
             <h1>{{station.title}}</h1>
             <h1>{{station.id}}</h1>
     
-            <youtube :video-id="currentVideo" @playing="playing" @ended="ended" @paused="paused" @buffering="buffering" @qued="qued" @error="error">
+            <youtube :video-id="currentVideo" @ready="ready" @change="change" @playing="playing" @ended="ended" @paused="paused" @buffering="buffering" @qued="qued" @error="error">
             </youtube>
             <div class="playlist">
-                <PlaylistItem v-for="(item, idx) in playlist" :key="idx" :item="item"></PlaylistItem>
+                <PlaylistItem v-for="(item, idx) in playlist" :key="idx" :item="item" @playSong="playSong"></PlaylistItem>
             </div>
             <input type="text" @input="search"></input>
             <SearchItem v-for="(item, idx) in searchResults" :item="item" :key="idx" @addToPlaylist="addToPlaylist"> </SearchItem>
@@ -44,7 +44,8 @@ export default {
         return {
             stationNotFound: false,
             currentVideo: 'jfe8pol6OG4', //this can be a promotional video we upload to youtube
-            searchResults: {}
+            searchResults: {},
+            player: null
         }
     },
     watch: {
@@ -89,6 +90,11 @@ export default {
         addToPlaylist(video) {
             this.$socket.emit('addToPlaylist', this.station.id, video, this.fingerprint)
         },
+        playSong(video) {
+            debugger;
+            //this.player.videoId = video.id.videoId
+            this.player.loadVideoById(video.id.videoId);
+        },
         search: _.debounce(function (e) {
             var that = this;
             var url = 'https://www.googleapis.com/youtube/v3/search?' +
@@ -103,8 +109,9 @@ export default {
             })
         }, 1500),
 
-        ready() {
-            console.log('ready')
+        ready(player) {
+            console.log('ready');
+            this.player = player;
         },
         ended() {
             console.log('ended')
@@ -123,6 +130,9 @@ export default {
         },
         error() {
             console.log('error')
+        },
+        change() {
+            console.log('change')
         }
     }
 }

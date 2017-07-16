@@ -8,7 +8,7 @@ var stations = {};
 
 var clientIdStationsMap = {}
 
-const settings = {
+var settings = {
     WAIT: 30000 //30 seconds wait before adding another song
 }
 
@@ -78,6 +78,8 @@ function addToPlaylist(stationId, video, fingerprint) {
         user.addedSongAt = now;
         station.playlist.push(video);
         io.to(stationId).emit('setStation', station);
+    } else {
+        console.log('you need to wait ' + ((settings.WAIT - (now - user.addedSongAt)) / 1000).toString() + ' seconds');
     }
 }
 

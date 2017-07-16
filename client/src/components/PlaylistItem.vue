@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div @click="$emit('playSong', item)">
         <h2>{{item.snippet.title}}</h2>
         <h3>{{item.snippet.description}}</h3>
     </div>
