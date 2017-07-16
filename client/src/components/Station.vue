@@ -1,21 +1,23 @@
 <template>
     <div>
-        <div v-if="station">
-            <h1>{{station.title}}</h1>
-            <h1>{{station.id}}</h1>
-    
-            <youtube :video-id="currentVideo" @playing="playing" @ended="ended" @paused="paused" @buffering="buffering" @qued="qued" @error="error">
-            </youtube>
-    
-            <input type="text" @input="search"></input>
-        </div>
         <div v-if="!station && !stationNotFound">
             <h1>looking for station</h1>
         </div>
         <div v-if="stationNotFound">
             <h1>station not found :(</h1>
         </div>
-        <SearchItem v-for="(item, idx) in searchResults" :item="item" :key="idx"> </SearchItem>
+        <div v-if="station">
+            <h1>{{station.title}}</h1>
+            <h1>{{station.id}}</h1>
+    
+            <youtube :video-id="currentVideo" @playing="playing" @ended="ended" @paused="paused" @buffering="buffering" @qued="qued" @error="error">
+            </youtube>
+            <div class="playlist">
+                <PlaylistItem v-for="(item, idx) in playlist" :key="idx" :item="item"></PlaylistItem>
+            </div>
+            <input type="text" @input="search"></input>
+            <SearchItem v-for="(item, idx) in searchResults" :item="item" :key="idx" @addToPlaylist="addToPlaylist"> </SearchItem>
+        </div>
     </div>
 </template>
 
@@ -23,11 +25,13 @@
 import _ from 'lodash'
 
 import SearchItem from './SearchItem'
+import PlaylistItem from './PlaylistItem'
 
 export default {
     name: 'station',
     components: {
-        SearchItem
+        SearchItem,
+        PlaylistItem
     },
     created() {
         if (!this.station) {
@@ -55,6 +59,7 @@ export default {
         setStation(station) {
             if (!station) {
                 this.stationNotFound = true;
+                this.$store.state.station = null;
             } else {
                 this.$store.commit('setStation', station)
                 this.stationNotFound = false;
@@ -68,6 +73,9 @@ export default {
         station() {
             return this.$store.state.station
         },
+        playlist() {
+            return this.$store.state.station.playlist
+        },
         fingerprint() {
             return this.$store.state.fingerprint
         }
@@ -77,6 +85,9 @@ export default {
             const id = this.$route.params.stationId;
             this.$socket.emit('join', id, this.fingerprint)
             this.stationNotFound = false;
+        },
+        addToPlaylist(video) {
+            this.$socket.emit('addToPlaylist', this.station.id, video, this.fingerprint)
         },
         search: _.debounce(function (e) {
             var that = this;

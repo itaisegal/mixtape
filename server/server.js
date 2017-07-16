@@ -8,17 +8,36 @@ var stations = {};
 
 var clientIdStationsMap = {}
 
+const settings = {
+    WAIT: 30000 //30 seconds wait before adding another song
+}
+
 function isIdTaken(id) {
     return stations[id] != null;
 }
 
-function openStation(creatorsFingerprint) {
+function getStationId() {
     var id = utils.generateId();
     while (isIdTaken(id)) {
         id = utils.generateId();
     }
+    return id;
+}
 
-    var station = { id, creatorsFingerprint, title: 'cool station sis', users: { [creatorsFingerprint]: { x: 0 } } };
+function openStation(creatorsFingerprint) {
+    var id = getStationId()
+    var station = {
+        id,
+        creatorsFingerprint,
+        title: 'cool station sis',
+        users: {
+            [creatorsFingerprint]: {
+                addedSongAt: 0
+            }
+        },
+        playlist: []
+    };
+
     stations[id] = station;
     return station;
 }
@@ -27,8 +46,11 @@ function joinStation(id, fingerprint) {
     console.log(`joining station id ${id} with fingerprint ${fingerprint}`)
     if (stations[id]) {
         if (!stations[id].users[fingerprint]) {
-            stations[id].users[fingerprint] = {}
+            stations[id].users[fingerprint] = {
+                addedSongAt: 0
+            }
         }
+
         for (var id in stations) {
             console.log(stations[id]);
         }
@@ -40,13 +62,24 @@ function joinStation(id, fingerprint) {
     }
 }
 
-// send a message to the station
-// setInterval(() => {
-//     io.emit('msg', 'hello all');
-//     for (var id in stations) {
-//         io.to(id).emit('msg', 'hello station:' + id)
-//     }
-// }, 3500);
+function addToPlaylist(stationId, video, fingerprint) {
+
+    if (!stations[stationId])
+        return;
+
+    var station = stations[stationId];
+
+    if (!station.users[fingerprint])
+        return;
+
+    var user = station.users[fingerprint];
+    var now = Date.now();
+    if (now - user.addedSongAt > settings.WAIT) {
+        user.addedSongAt = now;
+        station.playlist.push(video);
+        io.to(stationId).emit('setStation', station);
+    }
+}
 
 io.on('connection', function (socket) {
     console.log('a user connected from');
@@ -67,7 +100,11 @@ io.on('connection', function (socket) {
         station = joinStation(id, fingerprint);
         socket.join(id);
         socket.emit('setStation', station);
-    })
+    });
+
+    socket.on('addToPlaylist', function (stationId, videoId, fingerprint) {
+        addToPlaylist(stationId, videoId, fingerprint);
+    });
 });
 
 http.listen(3000, function () {
