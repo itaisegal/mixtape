@@ -1,4 +1,5 @@
-var app = require('express')();
+const express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var utils = require('./utils');
@@ -11,6 +12,10 @@ var clientIdStationsMap = {}
 var settings = {
     WAIT: 30000 //30 seconds wait before adding another song
 }
+
+var port = process.env.PORT || 3000;
+
+app.use(express.static('public'))
 
 function isIdTaken(id) {
     return stations[id] != null;
@@ -109,6 +114,6 @@ io.on('connection', function (socket) {
     });
 });
 
-http.listen(3000, function () {
-    console.log('listening on *:3000');
+http.listen(port, function () {
+    console.log('listening on *:' + port);
 });
