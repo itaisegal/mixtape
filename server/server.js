@@ -48,16 +48,11 @@ function openStation(creatorsFingerprint) {
 }
 
 function joinStation(id, fingerprint) {
-    console.log(`joining station id ${id} with fingerprint ${fingerprint}`)
     if (stations[id]) {
         if (!stations[id].users[fingerprint]) {
             stations[id].users[fingerprint] = {
                 addedSongAt: 0
             }
-        }
-
-        for (var id in stations) {
-            console.log(stations[id]);
         }
 
         return stations[id]
@@ -111,6 +106,11 @@ io.on('connection', function (socket) {
 
     socket.on('addToPlaylist', function (stationId, videoId, fingerprint) {
         addToPlaylist(stationId, videoId, fingerprint);
+    });
+
+    socket.on('getTime', function (clientTime) {
+        var serverTime = Date.now();
+        socket.emit('setTime', { serverTime, clientTime });
     });
 });
 

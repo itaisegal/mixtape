@@ -10,8 +10,11 @@
             <h1>{{station.title}}</h1>
             <h1>{{station.id}}</h1>
     
-            <youtube :video-id="currentVideo" @ready="ready" @change="change" @playing="playing" @ended="ended" @paused="paused" @buffering="buffering" @qued="qued" @error="error">
-            </youtube>
+            <!-- <youtube :video-id="currentVideo" @ready="ready" @change="change" @playing="playing" @ended="ended" @paused="paused" @buffering="buffering" @qued="qued" @error="error">
+                                                                            </youtube> -->
+    
+            <Player :playlist="playlist" :currentlyPlaying="currentlyPlaying"></Player>
+    
             <div class="playlist">
                 <PlaylistItem v-for="(item, idx) in playlist" :key="idx" :item="item" @playSong="playSong"></PlaylistItem>
             </div>
@@ -23,15 +26,25 @@
 
 <script>
 import _ from 'lodash'
-
+import { EventBus } from '../EventBus'
+//components
 import SearchItem from './SearchItem'
 import PlaylistItem from './PlaylistItem'
+import Player from './Player'
 
 export default {
     name: 'station',
     components: {
         SearchItem,
-        PlaylistItem
+        PlaylistItem,
+        Player
+    },
+    data() {
+        return {
+            stationNotFound: false,
+            currentVideo: 'dQw4w9WgXcQ', //this can be a promotional video we upload to youtube
+            searchResults: {}
+        }
     },
     created() {
         if (!this.station) {
@@ -40,16 +53,9 @@ export default {
             }
         }
     },
-    data() {
-        return {
-            stationNotFound: false,
-            currentVideo: 'jfe8pol6OG4', //this can be a promotional video we upload to youtube
-            searchResults: {},
-            player: null
-        }
-    },
     watch: {
         '$route'(to, from) {
+            debugger;
             this.joinStation();
         },
         fingerprint() {
@@ -62,9 +68,15 @@ export default {
                 this.stationNotFound = true;
                 this.$store.state.station = null;
             } else {
+                debugger;
                 this.$store.commit('setStation', station)
                 this.stationNotFound = false;
             }
+        },
+        setTime(time) {
+            var clientTime = Date.now();
+            var roundtripTime = clientTime - time.clientTime
+            this.$store.commit('setServerTimeOffset', time.serverTime - clientTime + roundtripTime / 2);
         },
         msg(msg) {
             console.log(msg);
@@ -79,39 +91,46 @@ export default {
         },
         fingerprint() {
             return this.$store.state.fingerprint
+        },
+        currentlyPlaying() {
+            return this.$store.state.station.currentlyPlaying
         }
     },
     methods: {
+        getTime() {
+            var clientTime = Date.now();
+            this.$socket.emit('getTime', clientTime);
+        },
         joinStation() {
             const id = this.$route.params.stationId;
             this.$socket.emit('join', id, this.fingerprint)
             this.stationNotFound = false;
         },
         addToPlaylist(video) {
+            debugger;
             this.$socket.emit('addToPlaylist', this.station.id, video, this.fingerprint)
         },
         playSong(video) {
-            debugger;
-            //this.player.videoId = video.id.videoId
-            this.player.loadVideoById(video.id.videoId);
+            EventBus.$emit('playSong', video);
         },
         search: _.debounce(function (e) {
             var that = this;
             var url = 'https://www.googleapis.com/youtube/v3/search?' +
                 'part=snippet' +
+                '&videoEmbeddable=true' +
                 '&type=video' +
                 '&key=AIzaSyCpIRRrbKFuBidSqk2SJREaQPniXaap1TU' +
                 '&q=' + e.target.value;
+
             fetch(url).then(results => {
                 results.json().then(data => {
                     that.searchResults = data.items;
                 })
             })
-        }, 1500),
+        }, 750),
 
         ready(player) {
             console.log('ready');
-            this.player = player;
         },
         ended() {
             console.log('ended')

@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
+        serverTimeOffset: null,
         station: null,
         fingerprint: null
     },
@@ -14,6 +15,9 @@ export default new Vuex.Store({
         },
         setFingerprint(state, fingerprint) {
             state.fingerprint = fingerprint;
+        },
+        setServerTimeOffset(state, offset) {
+            state.serverTimeOffset = offset;
         }
     }
 });
