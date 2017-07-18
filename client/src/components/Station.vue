@@ -11,7 +11,7 @@
             <h1>{{station.id}}</h1>
     
             <!-- <youtube :video-id="currentVideo" @ready="ready" @change="change" @playing="playing" @ended="ended" @paused="paused" @buffering="buffering" @qued="qued" @error="error">
-                                                                            </youtube> -->
+                                                                                    </youtube> -->
     
             <Player :playlist="playlist" :currentlyPlaying="currentlyPlaying"></Player>
     
@@ -42,20 +42,14 @@ export default {
     data() {
         return {
             stationNotFound: false,
-            currentVideo: 'dQw4w9WgXcQ', //this can be a promotional video we upload to youtube
             searchResults: {}
         }
     },
     created() {
-        if (!this.station) {
-            if (this.$store.state.fingerprint) {
-                this.joinStation()
-            }
-        }
+
     },
     watch: {
         '$route'(to, from) {
-            debugger;
             this.joinStation();
         },
         fingerprint() {
@@ -68,7 +62,6 @@ export default {
                 this.stationNotFound = true;
                 this.$store.state.station = null;
             } else {
-                debugger;
                 this.$store.commit('setStation', station)
                 this.stationNotFound = false;
             }
@@ -102,12 +95,13 @@ export default {
             this.$socket.emit('getTime', clientTime);
         },
         joinStation() {
-            const id = this.$route.params.stationId;
-            this.$socket.emit('join', id, this.fingerprint)
-            this.stationNotFound = false;
+            if (this.fingerprint) {
+                const id = this.$route.params.stationId;
+                this.$socket.emit('join', id, this.fingerprint)
+                this.stationNotFound = false;
+            }
         },
         addToPlaylist(video) {
-            debugger;
             this.$socket.emit('addToPlaylist', this.station.id, video, this.fingerprint)
         },
         playSong(video) {

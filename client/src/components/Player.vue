@@ -34,6 +34,7 @@ export default {
                 return item.id.videoId === videoId;
             });
             this.player1.loadVideoById(that.playlist[videoIdx].id.videoId);
+            this.activePlayer = 1;
         })
     },
     computed: {
@@ -52,7 +53,8 @@ export default {
         ended() {
             console.log('ended')
         },
-        playing() {
+        playing(player) {
+            debugger;
             console.log('playing')
         },
         paused() {
