@@ -102,6 +102,7 @@ export default {
             }
         },
         addToPlaylist(video) {
+            console.log('add to playlist');
             this.$socket.emit('addToPlaylist', this.station.id, video, this.fingerprint)
         },
         playSong(video) {

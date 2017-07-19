@@ -23,6 +23,7 @@ export default {
             player1: null,
             player2: null,
             activePlayer: null,
+            startTime: 0,
             fadeDuration: 10 //seconds
         }
     },
@@ -33,8 +34,12 @@ export default {
             var videoIdx = that.playlist.findIndex((item) => {
                 return item.id.videoId === videoId;
             });
+            debugger;
+            console.log(this.player1)
             this.player1.loadVideoById(that.playlist[videoIdx].id.videoId);
-            this.activePlayer = 1;
+            this.player1.setVolume(100);
+            this.activePlayer = this.player1;
+            this.startTime = performance.now();
         })
     },
     computed: {
@@ -45,17 +50,18 @@ export default {
     },
     methods: {
         player1Ready(player) {
-            this.player1 = player
+            this.player1 = player;
         },
         player2Ready(player) {
-            this.player2 = player
+            this.player2 = player;
         },
         ended() {
             console.log('ended')
         },
         playing(player) {
-            debugger;
-            console.log('playing')
+            console.log('playing');
+            var startFadeIn = player.getDuration() - this.fadeDuration;
+            setTimeout(this.fade, startFadeIn * 1000);
         },
         paused() {
             console.log('paused')
@@ -71,6 +77,22 @@ export default {
         },
         change() {
             console.log('change')
+        },
+        startFade() {
+            console.log('start fade');
+            setTimeout(this.fade, 50)
+        },
+        fade() {
+            // debugger;
+            console.log(this.activePlayer.getVolume());
+            var v = this.activePlayer.getVolume();
+            v *= 0.95;
+            if (v > 0.1) {
+                this.player1.setVolume(v);
+                setTimeout(this.fade, 50)
+            } else {
+                this.activePlayer.setVolume(0);
+            }
         }
     }
 }
