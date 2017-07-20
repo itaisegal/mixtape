@@ -25,7 +25,9 @@ export default {
             activePlayer: null,
             shadowPlayer: null,
             currentVideoIdx: null,
-            fadeDuration: 10 //seconds
+            fadeTimeout: null,
+            fadeEndTime: null,
+            fadeDuration: 5 //seconds
         }
     },
     created() {
@@ -59,11 +61,14 @@ export default {
         },
         playing(player) {
             console.log('playing');
-            var startFadeOut = player.getDuration() - this.fadeDuration;
-            setTimeout(this.startFade, startFadeOut * 1000);
+            if (this.playlist.length > this.currentVideoIdx + 1) {
+                var startFadeOut = player.getDuration() - player.getCurrentTime() - this.fadeDuration;
+                this.fadeTimeout = setTimeout(this.startFade, startFadeOut * 1000);
+            }
         },
         paused() {
-            console.log('paused')
+            console.log('paused');
+            clearInterval(this.fadeTimeout);
         },
         buffering() {
             console.log('buffering')
@@ -79,20 +84,18 @@ export default {
         },
         startFade() {
             console.log('start fade');
-            if (this.playlist.length > this.currentVideoIdx + 1) {
-                setTimeout(this.fade, 50);
-                this.shadowPlayer.setVolume(0);
-                this.shadowPlayer.loadVideoById(this.playlist[this.currentVideoIdx + 1].id.videoId);
-            }
+            this.shadowPlayer.setVolume(0);
+            this.shadowPlayer.loadVideoById(this.playlist[this.currentVideoIdx + 1].id.videoId);
+            this.fadeEndTime = performance.now() + this.fadeDuration * 1000;
+            requestAnimationFrame(this.fade);
         },
         fade() {
             var v = this.activePlayer.getVolume();
-            v *= 0.95;
+            var m = (this.fadeEndTime - performance.now()) / (this.fadeDuration * 1000);
             if (v > 2) {
-                console.log(100 - v);
-                this.activePlayer.setVolume(v);
-                this.shadowPlayer.setVolume(100 - v);
-                setTimeout(this.fade, 50)
+                this.activePlayer.setVolume(v * m);
+                this.shadowPlayer.setVolume(v * (1 - m));
+                requestAnimationFrame(this.fade)
             } else {
                 this.activePlayer.setVolume(0);
                 this.shadowPlayer.setVolume(100);
@@ -110,3 +113,6 @@ export default {
 }
 </script>
 
+<style scoped>
+
+</style>
