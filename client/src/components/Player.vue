@@ -20,10 +20,13 @@ export default {
         return {
             id1: 'JHyYOS61pO4',
             id2: 'dQw4w9WgXcQ',
+            volume: 100,
             player1: null,
             player2: null,
             activePlayer: null,
+            activePlayerDiv: null,
             shadowPlayer: null,
+            shadowPlayerDiv: null,
             currentVideoIdx: null,
             fadeTimeout: null,
             fadeEndTime: null,
@@ -33,14 +36,18 @@ export default {
     created() {
         var that = this;
         EventBus.$on('playSong', videoId => {
-            //find in playist
+            //find index in playist
             this.currentVideoIdx = that.playlist.findIndex((item) => {
                 return item.id.videoId === videoId;
             });
+
+            clearTimeout(this.fadeTimeout);
             this.player1.loadVideoById(that.playlist[this.currentVideoIdx].id.videoId);
             this.player1.setVolume(100);
             this.activePlayer = this.player1;
+            this.activePlayerDiv = document.getElementById('player1');
             this.shadowPlayer = this.player2;
+            this.shadowPlayerDiv = document.getElementById('player2');
         })
     },
     computed: {
@@ -89,16 +96,26 @@ export default {
             this.fadeEndTime = performance.now() + this.fadeDuration * 1000;
             requestAnimationFrame(this.fade);
         },
-        fade() {
-            var v = this.activePlayer.getVolume();
-            var m = (this.fadeEndTime - performance.now()) / (this.fadeDuration * 1000);
-            if (v > 2) {
-                this.activePlayer.setVolume(v * m);
-                this.shadowPlayer.setVolume(v * (1 - m));
+        fade(now) {
+            if (now < this.fadeEndTime) {
+                var m = (this.fadeEndTime - now) / (this.fadeDuration * 1000);
+
+                this.activePlayer.setVolume(this.volume * m);
+                this.activePlayerDiv.style.opacity = (m).toString();
+
+                this.shadowPlayer.setVolume(this.volume * (1.0 - m));
+                this.shadowPlayerDiv.style.opacity = (1 - m).toString();
+
+                // console.log('active: ' + this.activePlayer.getVolume() + '   shadow: ' + this.shadowPlayer.getVolume());
+
                 requestAnimationFrame(this.fade)
             } else {
                 this.activePlayer.setVolume(0);
+                this.shadowPlayerDiv.style.opacity = '0';
+
                 this.shadowPlayer.setVolume(100);
+                this.shadowPlayerDiv.style.opacity = '1';
+
                 this.switchPlayers();
                 this.currentVideoIdx++;
             }
@@ -108,6 +125,10 @@ export default {
             var p = this.activePlayer;
             this.activePlayer = this.shadowPlayer;
             this.shadowPlayer = p;
+
+            p = this.activePlayerDiv;
+            this.activePlayerDiv = this.shadowPlayerDiv;
+            this.shadowPlayerDiv = p;
         }
     }
 }
