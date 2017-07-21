@@ -42,12 +42,17 @@ export default {
             });
 
             clearTimeout(this.fadeTimeout);
-            this.player1.loadVideoById(that.playlist[this.currentVideoIdx].id.videoId);
-            this.player1.setVolume(100);
             this.activePlayer = this.player1;
             this.activePlayerDiv = document.getElementById('player1');
             this.shadowPlayer = this.player2;
             this.shadowPlayerDiv = document.getElementById('player2');
+
+            this.activePlayer.loadVideoById(that.playlist[this.currentVideoIdx].id.videoId);
+            this.activePlayer.setVolume(100);
+            this.activePlayerDiv.style.opacity = '1.0'
+
+            this.shadowPlayer.setVolume(0);
+            this.shadowPlayerDiv.style.opacity = '0.0'
         })
     },
     computed: {
@@ -93,6 +98,7 @@ export default {
             console.log('start fade');
             this.shadowPlayer.setVolume(0);
             this.shadowPlayer.loadVideoById(this.playlist[this.currentVideoIdx + 1].id.videoId);
+            this.currentVideoIdx++;
             this.fadeEndTime = performance.now() + this.fadeDuration * 1000;
             requestAnimationFrame(this.fade);
         },
@@ -106,8 +112,6 @@ export default {
                 this.shadowPlayer.setVolume(this.volume * (1.0 - m));
                 this.shadowPlayerDiv.style.opacity = (1 - m).toString();
 
-                // console.log('active: ' + this.activePlayer.getVolume() + '   shadow: ' + this.shadowPlayer.getVolume());
-
                 requestAnimationFrame(this.fade)
             } else {
                 this.activePlayer.setVolume(0);
@@ -117,7 +121,6 @@ export default {
                 this.shadowPlayerDiv.style.opacity = '1';
 
                 this.switchPlayers();
-                this.currentVideoIdx++;
             }
         },
 
