@@ -1,10 +1,12 @@
 <template>
-    <div id="players">
-        <div id="player1">
+    <div class="players">
+        <div id="player1" class="player">
+            <h2>player 1</h2>
             <youtube :video-id="id1" :player-vars="{controls:0}" @ready="player1Ready" @change="change" @playing="playing" @ended="ended" @paused="paused" @buffering="buffering" @qued="qued" @error="error">
             </youtube>
         </div>
-        <div id="player2">
+        <div id="player2" class="player">
+            <h2>player 2</h2>
             <youtube :video-id="id2" :player-vars="{controls:0}" @ready="player2Ready" @change="change" @playing="playing" @ended="ended" @paused="paused" @buffering="buffering" @qued="qued" @error="error">
             </youtube>
         </div>
@@ -28,31 +30,33 @@ export default {
             shadowPlayer: null,
             shadowPlayerDiv: null,
             currentVideoIdx: null,
-            fadeTimeout: null,
+            nextSongTimeout: null,
             fadeEndTime: null,
-            fadeDuration: 5 //seconds
+            fadeDuration: 3, //seconds
+            avgBufferingTime: 5 //seconds
         }
+    },
+    mounted() {
+        this.activePlayerDiv = document.getElementById('player1');
+        this.activePlayerDiv.style.opacity = '1.0'
+        this.activePlayerDiv.style.zIndex = 0;
+
+        this.shadowPlayerDiv = document.getElementById('player2');
+        this.shadowPlayerDiv.style.opacity = '0.0'
+        this.shadowPlayerDiv.style.zIndex = 1;
     },
     created() {
         var that = this;
         EventBus.$on('playSong', videoId => {
+
+            clearTimeout(this.nextSongTimeout);
+
             //find index in playist
             this.currentVideoIdx = that.playlist.findIndex((item) => {
                 return item.id.videoId === videoId;
             });
 
-            clearTimeout(this.fadeTimeout);
-            this.activePlayer = this.player1;
-            this.activePlayerDiv = document.getElementById('player1');
-            this.shadowPlayer = this.player2;
-            this.shadowPlayerDiv = document.getElementById('player2');
-
-            this.activePlayer.loadVideoById(that.playlist[this.currentVideoIdx].id.videoId);
-            this.activePlayer.setVolume(100);
-            this.activePlayerDiv.style.opacity = '1.0'
-
-            this.shadowPlayer.setVolume(0);
-            this.shadowPlayerDiv.style.opacity = '0.0'
+            this.shadowPlayer.loadVideoById(that.playlist[this.currentVideoIdx].id.videoId);
         })
     },
     computed: {
@@ -64,18 +68,34 @@ export default {
     methods: {
         player1Ready(player) {
             this.player1 = player;
+            this.activePlayer = this.player1;
+            this.activePlayer.setVolume(1);
         },
         player2Ready(player) {
             this.player2 = player;
+            this.shadowPlayer = this.player2;
+            this.shadowPlayer.setVolume(0);
+
+        },
+        playNext() {
+            //check again because song might have been removed from the list
+            if (this.playlist.length > this.currentVideoIdx + 1) {
+                var videoId = this.playlist[this.currentVideoIdx + 1].id.videoId;
+                EventBus.$emit('playSong', videoId);
+            }
         },
         ended() {
             console.log('ended')
         },
         playing(player) {
             console.log('playing');
+            if (player === this.shadowPlayer) {
+                this.startFade();
+            }
             if (this.playlist.length > this.currentVideoIdx + 1) {
-                var startFadeOut = player.getDuration() - player.getCurrentTime() - this.fadeDuration;
-                this.fadeTimeout = setTimeout(this.startFade, startFadeOut * 1000);
+                var startNextSongAt = player.getDuration() - player.getCurrentTime() - this.fadeDuration - this.avgBufferingTime;
+                console.log('next song starts in: ', startNextSongAt);
+                this.nextSongTimeout = setTimeout(this.playNext, startNextSongAt * 1000);
             }
         },
         paused() {
@@ -83,7 +103,8 @@ export default {
             clearInterval(this.fadeTimeout);
         },
         buffering() {
-            console.log('buffering')
+            console.log('buffering');
+            clearInterval(this.fadeTimeout);
         },
         qued() {
             console.log('qued')
@@ -97,29 +118,19 @@ export default {
         startFade() {
             console.log('start fade');
             this.shadowPlayer.setVolume(0);
-            this.shadowPlayer.loadVideoById(this.playlist[this.currentVideoIdx + 1].id.videoId);
-            this.currentVideoIdx++;
             this.fadeEndTime = performance.now() + this.fadeDuration * 1000;
             requestAnimationFrame(this.fade);
         },
         fade(now) {
             if (now < this.fadeEndTime) {
-                var m = (this.fadeEndTime - now) / (this.fadeDuration * 1000);
-
-                this.activePlayer.setVolume(this.volume * m);
-                this.activePlayerDiv.style.opacity = (m).toString();
-
-                this.shadowPlayer.setVolume(this.volume * (1.0 - m));
-                this.shadowPlayerDiv.style.opacity = (1 - m).toString();
-
+                var m = 1 - ((this.fadeEndTime - now) / (this.fadeDuration * 1000)); //value from 0 to 1 over fade duration
+                this.activePlayer.setVolume(this.volume * (1.0 - m));
+                this.shadowPlayer.setVolume(this.volume * m);
+                this.shadowPlayerDiv.style.opacity = (m).toString();
                 requestAnimationFrame(this.fade)
             } else {
                 this.activePlayer.setVolume(0);
-                this.shadowPlayerDiv.style.opacity = '0';
-
                 this.shadowPlayer.setVolume(100);
-                this.shadowPlayerDiv.style.opacity = '1';
-
                 this.switchPlayers();
             }
         },
@@ -132,11 +143,32 @@ export default {
             p = this.activePlayerDiv;
             this.activePlayerDiv = this.shadowPlayerDiv;
             this.shadowPlayerDiv = p;
+
+            this.activePlayerDiv.style.zIndex = 0;
+            this.activePlayerDiv.style.opacity = '1';
+
+            this.shadowPlayerDiv.style.zIndex = 1;
+            this.shadowPlayerDiv.style.opacity = '0';
         }
     }
 }
 </script>
 
 <style scoped>
+.player {
+    position: absolute;
+    display: block;
+    width: 640px;
+    height: 480px;
+}
 
+.players {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#player1>h2 {
+    color: red
+}
 </style>

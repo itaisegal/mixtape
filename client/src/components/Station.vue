@@ -10,10 +10,7 @@
             <h1>{{station.title}}</h1>
             <h1>{{station.id}}</h1>
     
-            <!-- <youtube :video-id="currentVideo" @ready="ready" @change="change" @playing="playing" @ended="ended" @paused="paused" @buffering="buffering" @qued="qued" @error="error">
-                                                                                    </youtube> -->
-    
-            <Player :playlist="playlist" :currentlyPlaying="currentlyPlaying"></Player>
+            <Player class="player" :playlist="playlist" :currentlyPlaying="currentlyPlaying"></Player>
     
             <div class="playlist">
                 <PlaylistItem v-for="(item, idx) in playlist" :key="idx" :item="item" @playSong="playSong"></PlaylistItem>
@@ -151,3 +148,7 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+
+</style>
