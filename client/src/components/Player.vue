@@ -32,8 +32,8 @@ export default {
             currentVideoIdx: null,
             nextSongTimeout: null,
             fadeEndTime: null,
-            fadeDuration: 3, //seconds
-            avgBufferingTime: 5 //seconds
+            fadeDuration: 5, //seconds
+            avgBufferingTime: 15 //seconds
         }
     },
     mounted() {
