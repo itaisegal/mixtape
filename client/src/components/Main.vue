@@ -1,8 +1,23 @@
 <template>
-    <div class="hello">
-        <button id="createStation" @click="createStation">Create Station</button>
-        <button id="joinStation" @click="joinStation">Join Station</button>
-        <input type="text" v-model="stationId"></input>
+    <div class="main">
+        <div class="top">
+            <div class="wave"></div>
+            <div class="logo"></div>
+        </div>
+    
+        <div class="bottom">
+            <div class="buttons">
+                <div class="btn" id="createStation" @click="createStation">
+                    Create Station
+                </div>
+    
+                <div class="btn" id="joinStation" @click="joinStation">
+                    Join Station
+                    <input type="text" v-model="stationId" maxlength="4"></input>
+                </div>
+    
+            </div>
+        </div>
     </div>
 </template>
 
@@ -37,22 +52,92 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h1,
-h2 {
-    font-weight: normal;
+.main {
+    min-width: 300px;
+    width: 100%;
+    height: 100vh;
+    background: #00a2ff;
+    background: linear-gradient(to bottom, #00a2ff 0%, #4acaff 100%);
+    background-attachment: fixed;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
+.top {
+    width: 100%;
+    height: 430px;
+    /* border: 1px solid black; */
 }
 
-li {
-    display: inline-block;
-    margin: 0 10px;
+.wave {
+    position: absolute;
+    width: 100%;
+    height: 228px;
+    max-height: 30%;
+    margin-top: 170px;
+    background-position-y: center;
+    background-position-x: center;
+    background-repeat: repeat-x;
+    background-size: contain;
+    background-image: url('../../graphics/wave_big.png')
 }
 
-a {
-    color: #42b983;
+.logo {
+    margin-top: 75px;
+    width: 100%;
+    height: 560px;
+    max-height: 50%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+    background-image: url('../../graphics/logo_big.png');
+    position: absolute;
+}
+
+.bottom {
+    /* border: 1px solid black; */
+    width: 100%;
+    padding-top: 26px;
+}
+
+.buttons {
+    margin-left: auto;
+    margin-right: auto;
+    /* border: 1px solid black; */
+}
+
+.btn {
+    cursor: pointer;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 330px;
+    height: 80px;
+    color: #23b5ff;
+    background: #fff;
+    line-height: 80px;
+    font-family: 'pixelated';
+    font-size: 40px;
+    text-align: center;
+    box-shadow: 0 4px #00a1f3;
+}
+
+.btn input {
+    border-radius: 8px;
+    width: 100px;
+    height: 50%;
+    font-size: 40px;
+    overflow: hidden;
+    text-align: justify;
+    text-justify: inter-ideograph;
+    letter-spacing: 3px;
+    padding-left: 3%;
+    font-family: 'pixelated';
+    color: #23b5ff;
+    text-transform: uppercase;
+}
+
+input:focus {
+    outline: none;
 }
 </style>

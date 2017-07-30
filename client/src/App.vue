@@ -5,7 +5,8 @@
 </template>
 
 <script>
-import Fingerprint2 from 'fingerprintjs2'
+import Fingerprint2 from 'fingerprintjs2';
+import "normalize.css";
 
 export default {
   name: 'app',
@@ -16,7 +17,7 @@ export default {
       excludeAdBlock: true
     };
 
-   var self = this; 
+    var self = this;
     new Fingerprint2(options).get(function (result) {
       console.log(result)
       self.$store.commit('setFingerprint', result)
@@ -27,12 +28,13 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: 'pixelated';
+  src: url('../fonts/PixellettersFull.ttf');
+}
+
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  height: 100%;
+  width: 100%;
 }
 </style>
