@@ -13,7 +13,7 @@
     
                 <div class="btn" id="joinStation" @click="joinStation">
                     Join Station
-                    <input type="text" v-model="stationId" maxlength="4"></input>
+                    <input type="text" v-model="stationId" maxlength="4" spellcheck="false"></input>
                 </div>
     
             </div>
@@ -63,7 +63,7 @@ export default {
 
 .top {
     width: 100%;
-    height: 430px;
+    min-height: 400px;
     /* border: 1px solid black; */
 }
 
@@ -72,7 +72,8 @@ export default {
     width: 100%;
     height: 228px;
     max-height: 30%;
-    margin-top: 170px;
+    min-height:25%;
+    margin-top: 15%;
     background-position-y: center;
     background-position-x: center;
     background-repeat: repeat-x;
@@ -85,6 +86,7 @@ export default {
     width: 100%;
     height: 560px;
     max-height: 50%;
+    min-height:40%;
     background-size: contain;
     background-repeat: no-repeat;
     background-position-x: center;
@@ -139,5 +141,6 @@ export default {
 
 input:focus {
     outline: none;
+    pointer-events: none;
 }
 </style>
