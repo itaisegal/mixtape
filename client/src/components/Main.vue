@@ -62,18 +62,17 @@ export default {
 }
 
 .top {
+    /* border: 1px solid black;  */
     width: 100%;
-    min-height: 400px;
-    /* border: 1px solid black; */
+    height: 50vh;
+    position: relative;
 }
 
 .wave {
     position: absolute;
     width: 100%;
-    height: 228px;
-    max-height: 30%;
-    min-height:25%;
-    margin-top: 15%;
+    height: 50%;
+    margin-top: 10%;
     background-position-y: center;
     background-position-x: center;
     background-repeat: repeat-x;
@@ -82,11 +81,10 @@ export default {
 }
 
 .logo {
-    margin-top: 75px;
+    height: 80%;
+    margin-top: 5%;
     width: 100%;
-    height: 560px;
-    max-height: 50%;
-    min-height:40%;
+    min-height: 40%;
     background-size: contain;
     background-repeat: no-repeat;
     background-position-x: center;
@@ -96,9 +94,9 @@ export default {
 }
 
 .bottom {
-    /* border: 1px solid black; */
+    /* border: 1px solid black;  */
     width: 100%;
-    padding-top: 26px;
+    position: relative;
 }
 
 .buttons {
