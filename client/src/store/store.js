@@ -7,7 +7,8 @@ export default new Vuex.Store({
     state: {
         serverTimeOffset: null,
         station: null,
-        fingerprint: null
+        fingerprint: null,
+        playerStatus: null
     },
     mutations: {
         setStation: (state, station) => {
@@ -18,6 +19,9 @@ export default new Vuex.Store({
         },
         setServerTimeOffset(state, offset) {
             state.serverTimeOffset = offset;
+        },
+        updatePlayerStatus(state, status){
+            state.playerStatus = status;
         }
     }
 });

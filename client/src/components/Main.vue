@@ -66,23 +66,21 @@ export default {
     width: 100%;
     height: 50vh;
     position: relative;
+    padding-top: 3%;
 }
 
 .wave {
     position: absolute;
     width: 100%;
-    height: 50%;
-    margin-top: 10%;
+    height: 100%;
     background-position-y: center;
     background-position-x: center;
     background-repeat: repeat-x;
-    background-size: contain;
     background-image: url('../../graphics/wave_big.png')
 }
 
 .logo {
-    height: 80%;
-    margin-top: 5%;
+    height: 90%;
     width: 100%;
     min-height: 40%;
     background-size: contain;
@@ -95,6 +93,7 @@ export default {
 
 .bottom {
     /* border: 1px solid black;  */
+    padding-top: 1%;
     width: 100%;
     position: relative;
 }

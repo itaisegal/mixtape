@@ -1,22 +1,30 @@
 <template>
-    <div>
-        <div v-if="!station && !stationNotFound">
-            <h1>looking for station</h1>
+    <div class="main">
+        <div class="top">
+            <div class="wave"></div>
+            <div class="logo"></div>
         </div>
-        <div v-if="stationNotFound">
-            <h1>station not found :(</h1>
-        </div>
-        <div v-if="station">
-            <h1>{{station.title}}</h1>
-            <h1>{{station.id}}</h1>
+        <div class="bottom">
+            <div class="container">
+                <div v-if="!station && !stationNotFound">
+                    <h1>looking for station</h1>
+                </div>
+                <div v-if="stationNotFound">
+                    <h1>station not found :(</h1>
+                </div>
+                <div v-if="station">
+                    <h1 class="id">{{station.id}}</h1>
+                    <h1 class="title">{{station.title}}</h1>
     
-            <Player class="player" :playlist="playlist" :currentlyPlaying="currentlyPlaying"></Player>
+                    <Player class="player" :playlist="playlist" ></Player>
     
-            <div class="playlist">
-                <PlaylistItem v-for="(item, idx) in playlist" :key="idx" :item="item" @playSong="playSong"></PlaylistItem>
+                    <div class="playlist">
+                        <PlaylistItem v-for="(item, idx) in playlist" :key="idx" :item="item" @playSong="playSong"></PlaylistItem>
+                    </div>
+                    <input type="text" @input="search"></input>
+                    <SearchItem v-for="(item, idx) in searchResults" :item="item" :key="idx" @addToPlaylist="addToPlaylist"> </SearchItem>
+                </div>
             </div>
-            <input type="text" @input="search"></input>
-            <SearchItem v-for="(item, idx) in searchResults" :item="item" :key="idx" @addToPlaylist="addToPlaylist"> </SearchItem>
         </div>
     </div>
 </template>
@@ -119,36 +127,83 @@ export default {
                     that.searchResults = data.items;
                 })
             })
-        }, 750),
-
-        ready(player) {
-            console.log('ready');
-        },
-        ended() {
-            console.log('ended')
-        },
-        playing() {
-            console.log('playing')
-        },
-        paused() {
-            console.log('paused')
-        },
-        buffering() {
-            console.log('buffering')
-        },
-        qued() {
-            console.log('qued')
-        },
-        error() {
-            console.log('error')
-        },
-        change() {
-            console.log('change')
-        }
+        }, 750)
     }
 }
 </script>
 
 <style scoped>
+.main {
+    min-width: 640px;
+    width: 100%;
+    height: 100%;
+    background: #00a2ff;
+    background: linear-gradient(to bottom, #00a2ff 0%, #4acaff 100%);
+    background-attachment: fixed;
+}
 
+.top {
+    /* border: 1px solid black;  */
+    width: 100%;
+    height: 35vh;
+    position: relative;
+    padding-top: 2%;
+}
+
+.wave {
+    position: absolute;
+    width: 100%;
+    height: 80%;
+    background-position-y: center;
+    background-position-x: center;
+    background-repeat: repeat-x;
+    background-image: url('../../graphics/wave_big.png')
+}
+
+.logo {
+    height: 90%;
+    width: 100%;
+    min-height: 40%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+    background-image: url('../../graphics/logo_big.png');
+    position: absolute;
+}
+
+.bottom {
+    /* border: 1px solid black;  */
+    padding-top: 1%;
+    width: 100%;
+    position: relative;
+}
+
+.container {
+    width: 100%;
+    max-width: 720px;
+    margin: auto;
+    text-align: center;
+}
+
+.id {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 100px;
+    color: white;
+    margin: 0;
+    margin-top: -2%;
+}
+
+.title {
+    font-family: 'pixelated';
+    font-size: 50px;
+    margin: 0;
+}
+
+.player{
+    width: 100%;
+    border: 5px solid white;
+    border-radius: 5px;
+    background: black;
+}
 </style>
