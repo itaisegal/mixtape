@@ -52,12 +52,16 @@ export default {
         this.shadowPlayerDiv = document.getElementById('player1');
         this.shadowPlayerDiv.style.opacity = '1'
         this.shadowPlayerDiv.style.zIndex = 0;
-    },
-    created() {
+
+        this.active = false;
+
         var that = this;
         EventBus.$on('playSong', videoId => {
-            this.play(videoId);
+            that.play(videoId);
         });
+    },
+    created() {
+
     },
     methods: {
         player2Ready(player) {
@@ -117,8 +121,9 @@ export default {
             }
         },
         play(videoId) {
+            debugger;
             this.shadowPlayer.loadVideoById(videoId);
-            this.shadowPlayerDiv.style.opacity = '0';
+            //this.shadowPlayerDiv.style.opacity = '0';
             this.updateStatus();
         },
         playing() {
@@ -132,6 +137,7 @@ export default {
             });
         },
         playNext() {
+            //TODO:
             //check again because song might have been removed from the list
             if (this.playlist.length > this.currentVideoIdx + 1) {
                 var videoId = this.playlist[this.currentVideoIdx + 1].id.videoId;
@@ -173,7 +179,7 @@ export default {
                 status[this.player2.getVideoData().video_id] = this.player2.getPlayerState();
 
             this.$store.commit('updatePlayerStatus', status);
-            console.log('status: ' + status);
+            // console.log('status: ' + status);
         },
 
         switchPlayers() {
