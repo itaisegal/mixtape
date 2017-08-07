@@ -1,14 +1,12 @@
 <template>
     <div class="players">
-        <div id="player1" class="player">
-            <!-- <h2>player1</h2> -->
-            <youtube :player-vars="{controls:0}" @ready="player1Ready" @playing="playing" @ended="ended" @paused="paused" @buffering="buffering" @qued="qued" @error="error">
-            </youtube>
+        <div id="player1-div" class="player">
+            <!-- <h2>player1</h2>  -->
+            <div id="player1"></div>
         </div>
-        <div id="player2" class="player">
-            <!-- <h2>player2</h2> -->
-            <youtube :player-vars="{controls:0}" @ready="player2Ready" @playing="playing" @ended="ended" @paused="paused" @buffering="buffering" @qued="qued" @error="error">
-            </youtube>
+        <div id="player2-div" class="player">
+            <!-- <h2>player2</h2>  -->
+            <div id="player2"></div>
         </div>
     </div>
 </template>
@@ -41,17 +39,15 @@ export default {
             active: true
         }
     },
-    beforeDestroy() {
-        this.active = false;
-    },
     mounted() {
-        this.activePlayerDiv = document.getElementById('player2');
-        this.activePlayerDiv.style.opacity = '1'
-        this.activePlayerDiv.style.zIndex = 1;
-
-        this.shadowPlayerDiv = document.getElementById('player1');
+        console.log('mounted');
+        this.shadowPlayerDiv = document.getElementById('player1-div');
         this.shadowPlayerDiv.style.opacity = '1'
         this.shadowPlayerDiv.style.zIndex = 0;
+
+        this.activePlayerDiv = document.getElementById('player2-div');
+        this.activePlayerDiv.style.opacity = '1'
+        this.activePlayerDiv.style.zIndex = 1;
 
         this.active = false;
 
@@ -59,27 +55,69 @@ export default {
         EventBus.$on('playSong', videoId => {
             that.play(videoId);
         });
-    },
-    created() {
 
+        if (!window.YT) {
+            debugger;
+            window.onYouTubeIframeAPIReady = this.YTApiReady;
+            var tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        } else {
+            debugger;
+            this.YTApiReady();
+        }
+    },
+
+    created() {
+        console.log('created');
+    },
+
+    beforeDestroy() {
+        console.log('before destroy');
+        this.player1.destroy();
+        this.player2.destroy();
+        this.active = false;
+        this.clearStatus();
     },
     methods: {
-        player2Ready(player) {
-            this.player2 = player;
-            this.activePlayer = this.player2;
-            this.activePlayer.setVolume(0);
+        YTApiReady() {
+            console.log('ytapi ready');
+            this.player1 = new YT.Player('player1', {
+                height: '390',
+                width: '640',
+                videoId: 'M7lc1UVf-VE',
+                volume: 0,
+                events: {
+                    'onReady': this.player1Ready,
+                    'onStateChange': this.stateChanged
+                }
+            });
 
-            if (this.player1) {
+            this.player2 = new YT.Player('player2', {
+                height: '390',
+                width: '640',
+                volume: 0,
+                videoId: 'M7lc1UVf-VE',
+                events: {
+                    'onReady': this.player2Ready,
+                    'onStateChange': this.stateChanged
+                }
+            });
+        },
+        player2Ready(player) {
+            this.activePlayer = player.target;
+
+            if (this.shadowPlayer) {
                 this.active = true;
                 this.checkState();
             }
         },
-        player1Ready(player) {
-            this.player1 = player;
-            this.shadowPlayer = this.player1;
-            this.shadowPlayer.setVolume(0);
 
-            if (this.player2) {
+        player1Ready(player) {
+            this.shadowPlayer = player.target;
+
+            if (this.activePlayer) {
                 this.active = true;
                 this.checkState();
             }
@@ -120,15 +158,34 @@ export default {
                 requestAnimationFrame(this.checkState);
             }
         },
+        stateChanged(state) {
+            console.log(state);
+            switch (state.data) {
+                case
+                    YT.PlayerState.PLAYING:
+                    this.playing();
+                    break;
+
+                case
+                    YT.PlayerState.ENDED:
+                    this.ended();
+                    break;
+
+                case
+                    YT.PlayerState.BUFFERING:
+                    this.buffering();
+                    break;
+
+                case
+                    YT.PlayerState.PAUSED:
+                    this.paused();
+                    break;
+            }
+        },
         play(videoId) {
             debugger;
             this.shadowPlayer.loadVideoById(videoId);
-            //this.shadowPlayerDiv.style.opacity = '0';
-            this.updateStatus();
-        },
-        playing() {
-            console.log('playing');
-            this.switchPlayers();
+            this.shadowPlayerDiv.style.opacity = '0';
             this.updateStatus();
         },
         getIndex(videoId) {
@@ -182,6 +239,10 @@ export default {
             // console.log('status: ' + status);
         },
 
+        clearStatus() {
+            this.$store.commit('updatePlayerStatus', {});
+        },
+
         switchPlayers() {
             var p = this.activePlayer;
             this.activePlayer = this.shadowPlayer;
@@ -218,7 +279,7 @@ export default {
     margin-right: auto;
 }
 
-#player1>h2 {
+#player1-div>h2 {
     color: red
 }
 </style>

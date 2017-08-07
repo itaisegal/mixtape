@@ -7,10 +7,10 @@ import router from './router'
 import store from './store/store'
 import socketio from 'socket.io-client'
 import VueSocketio from 'vue-socket.io'
-import VueYouTubeEmbed from 'vue-youtube-embed'
+// import VueYouTubeEmbed from 'vue-youtube-embed'
 
 Vue.config.productionTip = false
-Vue.use(VueYouTubeEmbed)
+// Vue.use(VueYouTubeEmbed)
 Vue.use(VueSocketio, socketio('https://mixtape-app.herokuapp.com'), store,{transports: ['websocket']});
 
 /* eslint-disable no-new */
