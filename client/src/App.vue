@@ -8,6 +8,7 @@
 import Fingerprint2 from 'fingerprintjs2';
 import "normalize.css";
 
+
 export default {
   name: 'app',
   created() {

@@ -1,36 +1,51 @@
 <template>
-    <div class="main">
-        <div class="top">
-            <div class="wave"></div>
-            <div class="logo"></div>
-        </div>
+    <div>
+        <div v-show="isMainView" class="main">
+            <div class="top">
+                <div class="wave"></div>
+                <div class="logo"></div>
+            </div>
     
-        <div class="bottom">
-            <div class="buttons">
-                <div class="btn" id="createStation" @click="createStation">
-                    Create Station
+            <div class="bottom">
+                <div class="buttons">
+                    <div class="btn" id="createStation" @click="createStation">
+                        Create Station
+                    </div>
+    
+                    <div class="btn" id="joinStation" @click="joinStation">
+                        Join Station
+                        <input type="text" v-model="stationId" maxlength="4" spellcheck="false"></input>
+                    </div>
+    
                 </div>
-    
-                <div class="btn" id="joinStation" @click="joinStation">
-                    Join Station
-                    <input type="text" v-model="stationId" maxlength="4" spellcheck="false"></input>
-                </div>
-    
             </div>
         </div>
+        <station v-show="!isMainView"></station>
     </div>
 </template>
 
 <script>
+import Station from './Station'
 export default {
-    name: 'hello',
+    name: 'main-view',
+    components: {
+        Station
+    },
     data() {
         return {
-            stationId: ''
+            stationId: '',
+        }
+    },
+    computed: {
+        isMainView() {
+            if (this.$route.params.stationId) return false;
+            else return true; 
         }
     },
     sockets: {
         setStation(station) {
+            if (!station) return;
+            
             this.$store.commit('setStation', station)
             this.$router.push('/' + station.id)
         },
