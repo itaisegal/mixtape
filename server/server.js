@@ -10,7 +10,7 @@ var stations = {};
 var clientIdStationsMap = {}
 
 var settings = {
-    WAIT: 30000 //30 seconds wait before adding another song
+    WAIT: 10000 //30 seconds wait before adding another song
 }
 
 var port = process.env.PORT || 3000;
@@ -95,7 +95,7 @@ io.on('connection', function (socket) {
     socket.on('newStation', function (fingerprint) {
         var station = openStation(fingerprint);
         socket.join(station.id);
-        socket.emit('setStation', station);
+        socket.emit('stationCreated', station.id);
     });
 
     socket.on('join', function (id, fingerprint) {

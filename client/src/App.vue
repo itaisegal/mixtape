@@ -1,13 +1,11 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+  <router-view>
+  </router-view>
 </template>
 
 <script>
 import Fingerprint2 from 'fingerprintjs2';
 import "normalize.css";
-
 
 export default {
   name: 'app',
@@ -23,7 +21,6 @@ export default {
       console.log(result)
       self.$store.commit('setFingerprint', result)
     });
-
   }
 }
 </script>

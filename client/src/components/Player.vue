@@ -1,12 +1,10 @@
 <template>
     <div class="players">
         <div id="player1-div" class="player">
-            <!-- <h2>player1</h2>  -->
-            <div id="player1"></div>
+            <youtube :video-id="'AP7utU8Efow'" @ready="player1ready" @buffering="buffering" @playing="playing" @paused="paused" @ended="ended" @error="error"></youtube>
         </div>
         <div id="player2-div" class="player">
-            <!-- <h2>player2</h2>  -->
-            <div id="player2"></div>
+            <youtube :video-id="'AP7utU8Efow'" @ready="player2ready" @buffering="buffering" @playing="playing" @paused="paused" @ended="ended" @error="error"></youtube>
         </div>
     </div>
 </template>
@@ -20,7 +18,6 @@ var playerState = {
 }
 
 export default {
-    props: ['playlist'],
     data() {
         return {
             player1: null,
@@ -40,7 +37,7 @@ export default {
         }
     },
     mounted() {
-        console.log('mounted');
+        console.log('player mounted');
         this.shadowPlayerDiv = document.getElementById('player1-div');
         this.shadowPlayerDiv.style.opacity = '1'
         this.shadowPlayerDiv.style.zIndex = 0;
@@ -49,138 +46,85 @@ export default {
         this.activePlayerDiv.style.opacity = '1'
         this.activePlayerDiv.style.zIndex = 1;
 
-        this.active = false;
-
         var that = this;
         EventBus.$on('playSong', videoId => {
             that.play(videoId);
         });
 
-        if (!window.YT) {
-            debugger;
-            window.onYouTubeIframeAPIReady = this.YTApiReady;
-            var tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        } else {
-            debugger;
-            this.YTApiReady();
-        }
+        EventBus.$on('stop', () => {
+            that.stop();
+        });
     },
 
     created() {
-        console.log('created');
+        console.log('player created');
     },
 
     beforeDestroy() {
-        console.log('before destroy');
-        this.player1.destroy();
-        this.player2.destroy();
-        this.active = false;
+        console.log('player before destroy');
         this.clearStatus();
     },
-    methods: {
-        YTApiReady() {
-            console.log('ytapi ready');
-            this.player1 = new YT.Player('player1', {
-                height: '390',
-                width: '640',
-                videoId: 'M7lc1UVf-VE',
-                volume: 0,
-                events: {
-                    'onReady': this.player1Ready,
-                    'onStateChange': this.stateChanged
-                }
-            });
 
-            this.player2 = new YT.Player('player2', {
-                height: '390',
-                width: '640',
-                volume: 0,
-                videoId: 'M7lc1UVf-VE',
-                events: {
-                    'onReady': this.player2Ready,
-                    'onStateChange': this.stateChanged
-                }
-            });
-        },
-        player2Ready(player) {
-            this.activePlayer = player.target;
+    destroyed() {
+        console.log('player destroyed');
+    },
+
+    methods: {
+        player2ready(player) {
+            this.activePlayer = player;
+            this.player2 = player;
 
             if (this.shadowPlayer) {
-                this.active = true;
                 this.checkState();
             }
         },
 
-        player1Ready(player) {
-            this.shadowPlayer = player.target;
+        player1ready(player) {
+            this.shadowPlayer = player;
+            this.player1 = player;
 
             if (this.activePlayer) {
-                this.active = true;
                 this.checkState();
             }
         },
         checkState() {
-            if (this.playerState === playerState.play && this.active) {
-                //inc active player volume
-                if (this.activeVolume < this.volume) {
-                    this.activeVolume += this.volumeFadeSpeed;
-                    this.activePlayer.setVolume(Math.round(this.activeVolume));
-                } else if (this.activeVolume > this.volume) {
-                    this.activeVolume = this.volume;
-                    this.activePlayer.setVolume(this.activeVolume);
-                }
-
-                //dec shadowPlayer volume
-                if (this.shadowVolume > 0) {
-                    this.shadowVolume -= this.volumeFadeSpeed;
-                    if (this.shadowVolume < 0.3) {
-                        this.shadowPlayer.pauseVideo();
-                        this.shadowVolume = 0;
-                    }
-                    this.shadowPlayer.setVolume(Math.round(this.shadowVolume));
-                }
-
-                //inc both players opacity all the time
-                var o = +getComputedStyle(this.shadowPlayerDiv).opacity;
-                if (o < 1) {
-                    this.shadowPlayerDiv.style.opacity = (o + this.opacityFadeSpeed).toString();
-                }
-
-                o = +getComputedStyle(this.activePlayerDiv).opacity;
-                if (o < 1) {
-                    this.activePlayerDiv.style.opacity = (o + this.opacityFadeSpeed).toString();
-                }
-
-                // console.log('shadow: ' + this.shadowPlayer.getVolume() + '   active: ' + this.activePlayer.getVolume());
-                requestAnimationFrame(this.checkState);
+            //inc active player volume
+            debugger;
+            if (this.activeVolume < this.volume) {
+                this.activeVolume += this.volumeFadeSpeed;
+                this.activePlayer.setVolume(Math.round(this.activeVolume));
+            } else if (this.activeVolume > this.volume) {
+                this.activeVolume = this.volume;
+                this.activePlayer.setVolume(this.activeVolume);
             }
-        },
-        stateChanged(state) {
-            console.log(state);
-            switch (state.data) {
-                case
-                    YT.PlayerState.PLAYING:
-                    this.playing();
-                    break;
 
-                case
-                    YT.PlayerState.ENDED:
-                    this.ended();
-                    break;
-
-                case
-                    YT.PlayerState.BUFFERING:
-                    this.buffering();
-                    break;
-
-                case
-                    YT.PlayerState.PAUSED:
-                    this.paused();
-                    break;
+            //dec shadowPlayer volume
+            if (this.shadowVolume > 0) {
+                this.shadowVolume -= this.volumeFadeSpeed;
+                if (this.shadowVolume < 2) {
+                    this.shadowPlayer.pauseVideo();
+                    this.shadowVolume = 0;
+                }
+                this.shadowPlayer.setVolume(Math.round(this.shadowVolume));
             }
+
+            //inc both players opacity all the time
+            var o = +getComputedStyle(this.shadowPlayerDiv).opacity;
+            if (o < 1) {
+                this.shadowPlayerDiv.style.opacity = (o + this.opacityFadeSpeed).toString();
+            }
+
+            o = +getComputedStyle(this.activePlayerDiv).opacity;
+            if (o < 1) {
+                this.activePlayerDiv.style.opacity = (o + this.opacityFadeSpeed).toString();
+            }
+
+            if (this.activePlayer.getPlayerState() == 1) {
+                console.log(this.activePlayer.getDuration() - this.activePlayer.getCurrentTime());
+            }
+
+            // console.log('shadow: ' + this.shadowPlayer.getVolume() + '   active: ' + this.activePlayer.getVolume());
+            requestAnimationFrame(this.checkState);
         },
         play(videoId) {
             debugger;
@@ -188,18 +132,13 @@ export default {
             this.shadowPlayerDiv.style.opacity = '0';
             this.updateStatus();
         },
-        getIndex(videoId) {
-            return this.playlist.findIndex((item) => {
-                return item.id.videoId === videoId;
-            });
+        stop() {
+            this.player1.pauseVideo();
+            this.player2.pauseVideo();
         },
         playNext() {
             //TODO:
             //check again because song might have been removed from the list
-            if (this.playlist.length > this.currentVideoIdx + 1) {
-                var videoId = this.playlist[this.currentVideoIdx + 1].id.videoId;
-                EventBus.$emit('playSong', videoId);
-            }
         },
         ended() {
             console.log('ended');
@@ -207,7 +146,8 @@ export default {
         },
         playing(player) {
             console.log('playing');
-            this.switchPlayers();
+            if (player != this.activePlayer)
+                this.switchPlayers();
             this.updateStatus();
 
         },
