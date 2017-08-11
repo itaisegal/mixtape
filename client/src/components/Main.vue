@@ -28,8 +28,9 @@
     
         <div class="station" v-show="$store.state.station">
             <div class="top">
-                <div class="wave"></div>
-                <div class="logo" @click="$router.push('/')"></div>
+                <div class="wave">
+                    <div class="logo" @click="$router.push('/')"></div>
+                </div>
             </div>
             <div v-if="$store.state.station">
                 <h1 class="station-id">{{$store.state.station.id}}</h1>
@@ -55,7 +56,7 @@ export default {
         }
     },
     created() {
-        console.log('main created')
+        console.log('main created');
         if (this.$route.params.stationId && this.$route.params.stationId.length === 4) {
             this.joinStation(this.$route.params.stationId.toUpperCase());
         }
@@ -142,9 +143,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .container {
-    width: 100%;
     height: 100%;
-    min-width: 100vw;
     min-height: 100vh;
     background: #00a2ff;
     background: linear-gradient(to bottom, #00a2ff 0%, #4acaff 100%);
@@ -153,7 +152,6 @@ export default {
 }
 
 .main {
-    min-width: 640px;
     width: 100%;
 }
 
@@ -162,7 +160,6 @@ export default {
     width: 100%;
     height: 50vh;
     position: relative;
-    padding-top: 3%;
 }
 
 .wave {
@@ -246,8 +243,6 @@ input:focus {
     width: 100%;
     height: 35vh;
     position: relative;
-    padding-top: 2%;
-    padding-bottom: 7%;
 }
 
 .station>.wave {

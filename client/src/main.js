@@ -11,7 +11,7 @@ import VueYouTubeEmbed from 'vue-youtube-embed'
 
 Vue.config.productionTip = false
 Vue.use(VueYouTubeEmbed)
-cdVue.use(VueSocketio, socketio('https://mixtape-app.herokuapp.com'), store,{transports: ['websocket']});
+Vue.use(VueSocketio, socketio('https://mixtape-app.herokuapp.com'), store,{transports: ['websocket']});
 // Vue.use(VueSocketio, socketio('localhost:3000'), store,{transports: ['websocket']});
 
 

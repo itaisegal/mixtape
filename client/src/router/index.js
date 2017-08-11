@@ -13,7 +13,7 @@ export default new Router({
     },
     {
       path: '/:stationId',
-      name: 'Main',
+      name: 'MainWithId',
       component: Main
     }
   ]
