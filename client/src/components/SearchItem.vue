@@ -33,7 +33,6 @@ export default {
 }
 
 .details {
-    width: 100%;
     margin-left: 80px;
 }
 

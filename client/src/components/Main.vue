@@ -236,6 +236,7 @@ input:focus {
 
 .station {
     width: 100%;
+    max-width: 100vw;
 }
 
 .station>.top {
