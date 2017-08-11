@@ -26,14 +26,15 @@ export default {
             activePlayerDiv: null,
             shadowPlayer: null,
             shadowPlayerDiv: null,
-            fadeStart: 5, //seconds before video finish to start the fade
+            fadeStart: 10, //seconds before video finish to start the fade
             volumeFadeSpeed: 0.2, //inc in volume and opacity 
             opacityFadeSpeed: 0.002,
             playerState: playerState.play,
             volume: 100,
             activeVolume: 0,
             shadowVolume: 0,
-            active: true
+            active: true,
+            currentVideo: null
         }
     },
     mounted() {
@@ -47,8 +48,8 @@ export default {
         this.activePlayerDiv.style.zIndex = 1;
 
         var that = this;
-        EventBus.$on('playSong', videoId => {
-            that.play(videoId);
+        EventBus.$on('playSong', video => {
+            that.play(video);
         });
 
         EventBus.$on('stop', () => {
@@ -89,7 +90,6 @@ export default {
         },
         checkState() {
             //inc active player volume
-            debugger;
             if (this.activeVolume < this.volume) {
                 this.activeVolume += this.volumeFadeSpeed;
                 this.activePlayer.setVolume(Math.round(this.activeVolume));
@@ -120,15 +120,17 @@ export default {
             }
 
             if (this.activePlayer.getPlayerState() == 1) {
-                console.log(this.activePlayer.getDuration() - this.activePlayer.getCurrentTime());
+                if (this.activePlayer.getDuration() - this.activePlayer.getCurrentTime() < this.fadeStart) {
+                    this.playNext();
+                }
             }
 
-            // console.log('shadow: ' + this.shadowPlayer.getVolume() + '   active: ' + this.activePlayer.getVolume());
             requestAnimationFrame(this.checkState);
         },
-        play(videoId) {
+        play(video) {
             debugger;
-            this.shadowPlayer.loadVideoById(videoId);
+            this.currentVideo = video;
+            this.shadowPlayer.loadVideoById(video.id.videoId);
             this.shadowPlayerDiv.style.opacity = '0';
             this.updateStatus();
         },
@@ -137,8 +139,15 @@ export default {
             this.player2.pauseVideo();
         },
         playNext() {
-            //TODO:
-            //check again because song might have been removed from the list
+            debugger;
+            var playlist = this.$store.state.station.playlist;
+            var that = this;
+            var idx = playlist.findIndex(function (item) {
+                return that.currentVideo === item;
+            });
+            if (playlist[idx + 1]) {
+                this.play(playlist[idx + 1]);
+            }
         },
         ended() {
             console.log('ended');

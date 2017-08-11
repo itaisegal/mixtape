@@ -1,5 +1,5 @@
 <template>
-    <div class="main" @click="$emit('playSong', item.id.videoId)">
+    <div class="main" @click="$emit('playSong', item)">
     
         <div class="thumbnail" :style="{ 'background-image' : 'url(' + item.snippet.thumbnails.default.url + ')' }"></div>
         <div class="title">{{item.snippet.title}}</div>

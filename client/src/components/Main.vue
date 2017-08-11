@@ -18,12 +18,18 @@
                     </div>
                 </div>
             </div>
+            <div v-if="findingStation">
+                finding station...
+            </div>
+            <div v-if="stationNotFound">
+                station not found :(
+            </div>
         </div>
     
         <div class="station" v-show="$store.state.station">
             <div class="top">
                 <div class="wave"></div>
-                <div class="logo"></div>
+                <div class="logo" @click="$router.push('/')"></div>
             </div>
             <div v-if="$store.state.station">
                 <h1 class="station-id">{{$store.state.station.id}}</h1>
@@ -108,8 +114,9 @@ export default {
             this.$socket.emit('newStation', this.$store.state.fingerprint)
         },
         join() {
+            debugger;
             if (this.stationId.length === 4) {
-                this.$router.push('/' + stationId);
+                this.$router.push('/' + this.stationId);
             }
         },
         joinStation(stationId) {
