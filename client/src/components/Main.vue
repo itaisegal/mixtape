@@ -237,6 +237,7 @@ input:focus {
 .station {
     width: 100%;
     max-width: 100vw;
+    padding-top: 20px;
 }
 
 .station>.top {
@@ -256,7 +257,7 @@ input:focus {
     background-image: url('../../graphics/wave_small.png')
 }
 
-.logo {
+station > .logo {
     height: 90%;
     width: 100%;
     min-height: 40%;
@@ -266,6 +267,7 @@ input:focus {
     background-position-y: center;
     background-image: url('../../graphics/logo_big.png');
     position: absolute;
+    cursor: pointer;
 }
 
 .station-id {

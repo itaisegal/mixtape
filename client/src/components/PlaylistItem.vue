@@ -42,6 +42,7 @@ export default {
     background: white;
     border-radius: 5px;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .thumbnail {
