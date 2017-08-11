@@ -57,14 +57,14 @@ export default {
     created() {
         console.log('main created')
         if (this.$route.params.stationId && this.$route.params.stationId.length === 4) {
-            this.joinStation(this.$route.params.stationId);
+            this.joinStation(this.$route.params.stationId.toUpperCase());
         }
     },
 
     watch: {
         $route(to, from) {
             if (to.params.stationId) {
-                this.joinStation(to.params.stationId);
+                this.joinStation(to.params.stationId.toUpperCase());
             } else {
                 this.leaveStation();
             }
@@ -91,6 +91,7 @@ export default {
             else return 0.5;
         }
     },
+
     sockets: {
         setStation(station) {
             debugger;
@@ -106,9 +107,11 @@ export default {
             }
         },
         stationCreated(stationId) {
+            debugger;
             this.$router.push('/' + stationId);
         }
     },
+
     methods: {
         createStation() {
             this.$socket.emit('newStation', this.$store.state.fingerprint)
