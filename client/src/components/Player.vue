@@ -75,13 +75,15 @@ export default {
             this.activePlayer = player;
             this.player2 = player;
 
+            debugger;
             var iframe = player.getIframe();
             iframe.style.width = "100vw";
             iframe.style.maxWidth = "640px"
             var w = window.getComputedStyle(iframe).width;
             w = parseInt(w);
+            if (w > 640) w = 640;
 
-            var h = (w * 0.601).toString() + 'px';
+            var h = (w * 0.55).toString() + 'px';
             iframe.style.height = h;
             document.getElementById('players').style.height = h;
 
@@ -99,8 +101,9 @@ export default {
             iframe.style.maxWidth = "640px"
             var w = window.getComputedStyle(iframe).width;
             w = parseInt(w);
+            if (w > 640) w = 640;
 
-            var h = (w * 0.601).toString() + 'px';
+            var h = (w * 0.55).toString() + 'px';
             iframe.style.height = h;
             document.getElementById('players').style.height = h;
 

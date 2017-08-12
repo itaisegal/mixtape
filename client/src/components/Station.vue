@@ -7,7 +7,7 @@
             <PlaylistItem v-for="(item, idx) in $store.state.station.playlist" :key="idx" :item="item" @playSong="playSong"></PlaylistItem>
         </div>
     
-        <input class="search" type="text" @input="search"></input>
+        <input class="search" type="text" @input="search" placeholder="Search..."></input>
         <SearchItem v-for="(item, idx) in searchResults" :item="item" :key="idx" @addToPlaylist="addToPlaylist"> </SearchItem>
     </div>
 </template>
@@ -83,15 +83,25 @@ export default {
     text-align: center;
 }
 
-.player{
+.player {
     /* border: 5px solid white;
     border-radius: 10px; */
 }
 
-.playlist{
+.playlist {
     width: 100%;
     max-width: 720px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.search {
+    margin: 5px;
+    border-radius: 15px;
+    outline: none;
+    border: none;
+    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
+    font-size: 20px;
+    padding: 7px;
 }
 </style>
