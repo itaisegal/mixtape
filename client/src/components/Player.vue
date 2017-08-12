@@ -1,5 +1,5 @@
 <template>
-    <div class="players">
+    <div class="players" id="players">
         <div id="player1-div" class="player">
             <youtube :video-id="'AP7utU8Efow'" @ready="player1ready" @buffering="buffering" @playing="playing" @paused="paused" @ended="ended" @error="error"></youtube>
         </div>
@@ -75,6 +75,16 @@ export default {
             this.activePlayer = player;
             this.player2 = player;
 
+            var iframe = player.getIframe();
+            iframe.style.width = "100vw";
+            iframe.style.maxWidth = "640px"
+            var w = window.getComputedStyle(iframe).width;
+            w = parseInt(w);
+
+            var h = (w * 0.601).toString() + 'px';
+            iframe.style.height = h;
+            document.getElementById('players').style.height = h;
+
             if (this.shadowPlayer) {
                 this.checkState();
             }
@@ -83,6 +93,16 @@ export default {
         player1ready(player) {
             this.shadowPlayer = player;
             this.player1 = player;
+
+            var iframe = player.getIframe();
+            iframe.style.width = "100vw";
+            iframe.style.maxWidth = "640px"
+            var w = window.getComputedStyle(iframe).width;
+            w = parseInt(w);
+
+            var h = (w * 0.601).toString() + 'px';
+            iframe.style.height = h;
+            document.getElementById('players').style.height = h;
 
             if (this.activePlayer) {
                 this.checkState();
@@ -221,14 +241,11 @@ export default {
 }
 
 .players {
-    height: 390px;
-    width: 640px;
+    max-height: 390px;
+    max-width: 640px;
+    width: 100vw;
     position: relative;
     margin-left: auto;
     margin-right: auto;
-}
-
-#player1-div>h2 {
-    color: red
 }
 </style>

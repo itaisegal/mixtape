@@ -84,8 +84,8 @@ export default {
 }
 
 .player{
-    border: 5px solid white;
-    border-radius: 10px;
+    /* border: 5px solid white;
+    border-radius: 10px; */
 }
 
 .playlist{
