@@ -267,7 +267,6 @@ station > .logo {
     background-position-y: center;
     background-image: url('../../graphics/logo_big.png');
     position: absolute;
-    cursor: pointer;
 }
 
 .station-id {

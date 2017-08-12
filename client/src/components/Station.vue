@@ -81,6 +81,7 @@ export default {
 .main {
     width: 100%;
     text-align: center;
+    overflow: hidden;
 }
 
 .player {

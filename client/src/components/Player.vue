@@ -34,7 +34,8 @@ export default {
             activeVolume: 0,
             shadowVolume: 0,
             active: true,
-            currentVideo: null
+            currentVideo: null,
+            startingNext: false
         }
     },
     mounted() {
@@ -142,9 +143,12 @@ export default {
                 this.activePlayerDiv.style.opacity = (o + this.opacityFadeSpeed).toString();
             }
 
-            if (this.activePlayer.getPlayerState() == 1) {
-                if (this.activePlayer.getDuration() - this.activePlayer.getCurrentTime() < this.fadeStart) {
-                    this.playNext();
+            if (!this.startingNext) {
+                if (this.activePlayer.getPlayerState() == 1) {
+                    if (this.activePlayer.getDuration() - this.activePlayer.getCurrentTime() < this.fadeStart) {
+                        this.playNext();
+                        this.startingNext = true;
+                    }
                 }
             }
 
@@ -156,6 +160,7 @@ export default {
             this.shadowPlayer.loadVideoById(video.id.videoId);
             this.shadowPlayerDiv.style.opacity = '0';
             this.updateStatus();
+            this.startingNext = false;
         },
         stop() {
             this.player1.pauseVideo();
@@ -239,8 +244,6 @@ export default {
 .player {
     position: absolute;
     display: block;
-    width: 100%;
-    height: 100%;
 }
 
 .players {
