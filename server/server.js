@@ -10,7 +10,8 @@ var stations = {};
 var clientIdStationsMap = {}
 
 var settings = {
-    WAIT: 90000 //30 seconds wait before adding another song
+    // WAIT: 90000 //90 seconds wait before adding another song
+    WAIT: 5000 //5 seconds wait before adding another song
 }
 
 var port = process.env.PORT || 3000;
