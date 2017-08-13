@@ -1,10 +1,10 @@
 <template>
     <div class="players" id="players">
         <div id="player1-div" class="player">
-            <youtube :video-id="'AP7utU8Efow'" @ready="player1ready" @buffering="buffering" @playing="playing" @paused="paused" @ended="ended" @error="error"></youtube>
+            <youtube @ready="player1ready" @buffering="buffering" @playing="playing" @paused="paused" @ended="ended" @error="error"></youtube>
         </div>
         <div id="player2-div" class="player">
-            <youtube :video-id="'AP7utU8Efow'" @ready="player2ready" @buffering="buffering" @playing="playing" @paused="paused" @ended="ended" @error="error"></youtube>
+            <youtube @ready="player2ready" @buffering="buffering" @playing="playing" @paused="paused" @ended="ended" @error="error"></youtube>
         </div>
     </div>
 </template>
@@ -143,9 +143,9 @@ export default {
                 this.activePlayerDiv.style.opacity = (o + this.opacityFadeSpeed).toString();
             }
 
-            console.log('check next song');
-            console.log('startingNext: ' + this.startingNext + '  ap state: ' + this.activePlayer.getPlayerState());
-            console.log('time left: ' + (this.activePlayer.getDuration() - this.activePlayer.getCurrentTime()).toString());
+            // console.log('check next song');
+            // console.log('startingNext: ' + this.startingNext + '  ap state: ' + this.activePlayer.getPlayerState());
+            // console.log('time left: ' + (this.activePlayer.getDuration() - this.activePlayer.getCurrentTime()).toString());
 
             if (!this.startingNext) {
                 if (this.activePlayer.getPlayerState() == 1) {
@@ -257,7 +257,5 @@ export default {
     max-width: 640px;
     width: 100vw;
     position: relative;
-    margin-left: auto;
-    margin-right: auto;
 }
 </style>

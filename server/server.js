@@ -65,8 +65,10 @@ function joinStation(id, fingerprint) {
 
 function addToPlaylist(stationId, video, fingerprint) {
 
-    if (!stations[stationId])
+    if (!stations[stationId]) {
+        console.log("can't add song, station doesn't exist");
         return;
+    }
 
     var station = stations[stationId];
 

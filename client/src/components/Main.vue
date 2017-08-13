@@ -26,27 +26,18 @@
             </div>
         </div>
     
-        <div class="station" v-show="$store.state.station">
-            <div class="top">
-                <div class="wave">
-                    <div class="logo" @click="$router.push('/')"></div>
-                </div>
-            </div>
-            <div v-if="$store.state.station">
-                <h1 class="station-id">{{$store.state.station.id}}</h1>
-                <h1 class="station-title">{{$store.state.station.title}}</h1>
-            </div>
-            <station></station>
-        </div>
+        <station v-show="$store.state.station"></station>
     </div>
 </template>
 
 <script>
-import Station from './Station'
+import Station from './Station';
+import Search from './Search';
 export default {
     name: 'main-view',
     components: {
-        Station
+        Station,
+        Search
     },
     data() {
         return {
@@ -96,6 +87,7 @@ export default {
     sockets: {
         setStation(station) {
             debugger;
+            console.log('set station:' + station);
             if (!station) {
                 console.log('station not found');
                 this.$store.commit('setStation', null);
@@ -229,57 +221,11 @@ export default {
     text-transform: uppercase;
 }
 
-input:focus {
-    outline: none;
-    pointer-events: none;
-}
 
-.station {
+
+.station-container {
     width: 100%;
     max-width: 100vw;
     padding-top: 20px;
-}
-
-.station>.top {
-    /* border: 1px solid black;  */
-    width: 100%;
-    height: 35vh;
-    position: relative;
-}
-
-.station>.wave {
-    position: absolute;
-    width: 100%;
-    height: 80%;
-    background-position-y: center;
-    background-position-x: center;
-    background-repeat: repeat-x;
-    background-image: url('../../graphics/wave_small.png')
-}
-
-station > .logo {
-    height: 90%;
-    width: 100%;
-    min-height: 40%;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position-x: center;
-    background-position-y: center;
-    background-image: url('../../graphics/logo_big.png');
-    position: absolute;
-}
-
-.station-id {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 100px;
-    color: white;
-    margin: 0;
-    margin-top: -2%;
-}
-
-.station-title {
-    font-family: 'pixelated';
-    font-size: 50px;
-    margin: 0;
 }
 </style>

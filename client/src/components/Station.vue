@@ -1,36 +1,36 @@
 <template>
     <div class="main">
-    
-        <player class="player"></player>
-    
-        <div class="playlist" v-if="$store.state.station">
-            <PlaylistItem v-for="(item, idx) in $store.state.station.playlist" :key="idx" :item="item" @playSong="playSong"></PlaylistItem>
+        <div class="top">
+            <div class="wave">
+                <div class="logo" @click="$router.push('/')"></div>
+            </div>
         </div>
     
-        <input class="search" type="text" @input="search" placeholder="Search..."></input>
-        <SearchItem v-for="(item, idx) in searchResults" :item="item" :key="idx" @addToPlaylist="addToPlaylist"> </SearchItem>
+        <div v-if="$store.state.station">
+            <h1 class="station-id">{{$store.state.station.id}}</h1>
+            <h1 class="station-title">{{$store.state.station.title}}</h1>
+        </div>
+    
+        <player class="player"></player>
+        <playlist class="playlist"></playlist>
+        <search></search>
     </div>
 </template>
 
 <script>
-import _ from 'lodash'
-import { EventBus } from '../EventBus'
+import _ from 'lodash';
+import { EventBus } from '../EventBus';
 //components
-import SearchItem from './SearchItem'
-import PlaylistItem from './PlaylistItem'
-import Player from './Player'
+import Playlist from './Playlist';
+import Player from './Player';
+import Search from './Search';
 
 export default {
     name: 'station',
     components: {
-        SearchItem,
-        PlaylistItem,
-        Player
-    },
-    data() {
-        return {
-            searchResults: {}
-        }
+        Player,
+        Playlist,
+        Search
     },
 
     created() {
@@ -51,28 +51,9 @@ export default {
         }
     },
     methods: {
-        addToPlaylist(video) {
-            console.log('add to playlist');
-            this.$socket.emit('addToPlaylist', this.$store.state.station.id, video, this.fingerprint)
-        },
         playSong(video) {
             EventBus.$emit('playSong', video);
-        },
-        search: _.debounce(function (e) {
-            var that = this;
-            var url = 'https://www.googleapis.com/youtube/v3/search?' +
-                'part=snippet' +
-                '&videoEmbeddable=true' +
-                '&type=video' +
-                '&key=AIzaSyCpIRRrbKFuBidSqk2SJREaQPniXaap1TU' +
-                '&q=' + e.target.value;
-
-            fetch(url).then(results => {
-                results.json().then(data => {
-                    that.searchResults = data.items;
-                })
-            })
-        }, 750)
+        }
     }
 }
 </script>
@@ -82,6 +63,48 @@ export default {
     width: 100%;
     text-align: center;
     overflow: hidden;
+}
+
+.top {
+    width: 100%;
+    height: 35vh;
+    position: relative;
+}
+
+.wave {
+    position: absolute;
+    width: 100%;
+    height: 80%;
+    background-position-y: center;
+    background-position-x: center;
+    background-repeat: repeat-x;
+    background-image: url('../../graphics/wave_small.png')
+}
+
+.logo {
+    height: 90%;
+    width: 100%;
+    min-height: 40%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    background-position-y: center;
+    background-image: url('../../graphics/logo_big.png');
+    position: absolute;
+}
+
+.station-title {
+    font-family: 'pixelated';
+    font-size: 50px;
+    margin: 0;
+}
+
+.station-id {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 100px;
+    color: white;
+    margin: 0;
+    margin-top: -2%;
 }
 
 .player {
@@ -97,6 +120,16 @@ export default {
 }
 
 .search {
+    border: 3px solid blue;
+    width: 100vw;
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.search-input {
     margin: 5px;
     border-radius: 15px;
     outline: none;
@@ -104,5 +137,10 @@ export default {
     /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
     font-size: 20px;
     padding: 7px;
+}
+
+.player {
+    margin-left: auto;
+    margin-right: auto;
 }
 </style>
