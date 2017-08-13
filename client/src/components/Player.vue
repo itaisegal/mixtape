@@ -178,6 +178,8 @@ export default {
             });
             if (playlist[idx + 1]) {
                 this.play(playlist[idx + 1]);
+            } else {
+                this.startingNext = false;
             }
         },
         ended() {
