@@ -143,6 +143,10 @@ export default {
                 this.activePlayerDiv.style.opacity = (o + this.opacityFadeSpeed).toString();
             }
 
+            console.log('check next song');
+            console.log('startingNext: ' + this.startingNext + '  ap state: ' + this.activePlayer.getPlayerState());
+            console.log('time left: ' + (this.activePlayer.getDuration() - this.activePlayer.getCurrentTime()).toString());
+
             if (!this.startingNext) {
                 if (this.activePlayer.getPlayerState() == 1) {
                     if (this.activePlayer.getDuration() - this.activePlayer.getCurrentTime() < this.fadeStart) {
@@ -160,7 +164,6 @@ export default {
             this.shadowPlayer.loadVideoById(video.id.videoId);
             this.shadowPlayerDiv.style.opacity = '0';
             this.updateStatus();
-            this.startingNext = false;
         },
         stop() {
             this.player1.pauseVideo();
@@ -186,6 +189,7 @@ export default {
             if (player != this.activePlayer)
                 this.switchPlayers();
             this.updateStatus();
+            this.startingNext = false;
 
         },
         paused() {
