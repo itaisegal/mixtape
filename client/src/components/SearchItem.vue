@@ -1,9 +1,10 @@
 <template>
     <div class="item" @click="$emit('addToPlaylist',item)">
-        <img class="thumb" :src="item.snippet.thumbnails.default.url">
+        <div class="thumb" :style="{ backgroundImage: 'url(' + item.snippet.thumbnails.default.url + ')' }"></div>
+        <div class="addBtn"></div>
         <div class="details">
             <div class="title">
-                <h3> {{item.snippet.title}} </h3>
+                {{item.snippet.title}}
             </div>
             <div class="description">
                 {{item.snippet.description}}
@@ -21,30 +22,51 @@ export default {
 
 <style scoped>
 .item {
+    margin-top: 20px;
     width: 100%;
-    min-height: 80px;
-    background-color: rgba(0,0,0, 0.1);
+    height: 80px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.9);
     cursor: pointer;
+    overflow: hidden;
 }
 
 .thumb {
     width: 80px;
-    height: 80px;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
     display: block;
     float: left;
 }
 
 .details {
-    margin-left: 80px;
+    text-overflow: clip;
+    overflow: hidden;
+    padding-left: 10px;
+    color: white;
+    font-family: 'pixelated';
 }
 
 .title {
     width: 100%;
+    font-size: 25px;
     text-align: left;
 }
 
 .description {
     width: 100%;
+    font-size: 20px;
     text-align: left;
+}
+
+.addBtn {
+    background-image: url('../../graphics/plus.png');
+    width: 80px;
+    height: 80px;
+    float: right;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-left: 1px solid grey;
 }
 </style>

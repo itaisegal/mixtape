@@ -1,9 +1,9 @@
 <template>
     <div class="main">
         <div class="top">
-            <div class="wave">
-                <div class="logo" @click="$router.push('/')"></div>
-            </div>
+            <div class="wave"></div>
+            <div class="logo" @click="$router.push('/')"></div>
+            <!-- <div class="logo"></div> -->
         </div>
     
         <div v-if="$store.state.station">
@@ -67,30 +67,33 @@ export default {
 
 .top {
     width: 100%;
-    height: 35vh;
+    min-height: 140px;
     position: relative;
 }
 
 .wave {
     position: absolute;
     width: 100%;
-    height: 80%;
+    height: 100%;
     background-position-y: center;
     background-position-x: center;
     background-repeat: repeat-x;
+    background-size: contain;
     background-image: url('../../graphics/wave_small.png')
 }
 
 .logo {
-    height: 90%;
-    width: 100%;
-    min-height: 40%;
+    margin: 2vw;
+    height: 25vw;
+    width: 25vw;
+    min-width: 140px;
+    min-height: 140px;
+    max-width: 300px;
+    max-height: 300px;
     background-size: contain;
     background-repeat: no-repeat;
-    background-position-x: center;
-    background-position-y: center;
-    background-image: url('../../graphics/logo_big.png');
     position: absolute;
+    background-image: url('../../graphics/logo_big.png');
 }
 
 .station-title {
@@ -107,36 +110,16 @@ export default {
     margin-top: -2%;
 }
 
-.player {
-    /* border: 5px solid white;
-    border-radius: 10px; */
-}
+
+/* .player {
+    border: 5px solid white;
+    border-radius: 10px;
+} */
 
 .playlist {
-    width: 100%;
     max-width: 720px;
     margin-left: auto;
     margin-right: auto;
-}
-
-.search {
-    border: 3px solid blue;
-    width: 100vw;
-    max-width: 720px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 5px;
-    border-radius: 10px;
-}
-
-.search-input {
-    margin: 5px;
-    border-radius: 15px;
-    outline: none;
-    border: none;
-    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
-    font-size: 20px;
-    padding: 7px;
 }
 
 .player {

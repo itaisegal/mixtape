@@ -44,41 +44,8 @@ export default {
 </script>
 
 <style scoped>
-.main {
-    width: 100%;
-    text-align: center;
-    overflow: hidden;
-}
-
-.player {
-    /* border: 5px solid white;
-    border-radius: 10px; */
-}
 
 .playlist {
     width: 100%;
-    max-width: 720px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.search {
-    border: 3px solid blue;
-    width: 100vw;
-    max-width: 720px;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 5px;
-    border-radius: 10px;
-}
-
-.search-input {
-    margin: 5px;
-    border-radius: 15px;
-    outline: none;
-    border: none;
-    /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
-    font-size: 20px;
-    padding: 7px;
 }
 </style>

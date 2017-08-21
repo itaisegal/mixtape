@@ -25,7 +25,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 @font-face {
   font-family: 'pixelated';
   src: url('../fonts/PixellettersFull.ttf');

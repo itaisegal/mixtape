@@ -78,8 +78,8 @@ export default {
 
             debugger;
             var iframe = player.getIframe();
-            iframe.style.width = "100vw";
-            iframe.style.maxWidth = "640px"
+            iframe.style.width = '100vw';
+            iframe.style.maxWidth = '640px'
             var w = window.getComputedStyle(iframe).width;
             w = parseInt(w);
             if (w > 640) w = 640;
@@ -98,8 +98,8 @@ export default {
             this.player1 = player;
 
             var iframe = player.getIframe();
-            iframe.style.width = "100vw";
-            iframe.style.maxWidth = "640px"
+            iframe.style.width = '100vw';
+            iframe.style.maxWidth = '640px'
             var w = window.getComputedStyle(iframe).width;
             w = parseInt(w);
             if (w > 640) w = 640;
