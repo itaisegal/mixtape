@@ -5,12 +5,12 @@
             <div class="logo" @click="$router.push('/')"></div>
             <!-- <div class="logo"></div> -->
         </div>
-    
+
         <div v-if="$store.state.station">
             <h1 class="station-id">{{$store.state.station.id}}</h1>
             <h1 class="station-title">{{$store.state.station.title}}</h1>
         </div>
-    
+
         <player class="player"></player>
         <playlist class="playlist"></playlist>
         <search></search>
@@ -109,6 +109,7 @@ export default {
     margin: 0;
     margin-top: -2%;
 }
+
 
 
 /* .player {

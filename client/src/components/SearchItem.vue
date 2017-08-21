@@ -22,7 +22,7 @@ export default {
 
 <style scoped>
 .item {
-    margin-top: 20px;
+    margin-top: 12px;
     width: 100%;
     height: 80px;
     border-radius: 5px;
@@ -56,7 +56,7 @@ export default {
 
 .description {
     width: 100%;
-    font-size: 20px;
+    line-height: 17px;
     text-align: left;
 }
 

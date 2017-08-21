@@ -160,6 +160,7 @@ export default {
 }
 
 .list {
+    margin-top: 15px;
     position: absolute;
     width: 80vw;
     max-width: 640px;
