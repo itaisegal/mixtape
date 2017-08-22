@@ -26,7 +26,7 @@ export default {
             activePlayerDiv: null,
             shadowPlayer: null,
             shadowPlayerDiv: null,
-            fadeStart: 10, //seconds before video finish to start the fade
+            fadeStart: 20, //seconds before video finish to start the fade
             volumeFadeSpeed: 0.2, //inc in volume and opacity 
             opacityFadeSpeed: 0.002,
             playerState: playerState.play,
@@ -205,8 +205,10 @@ export default {
         qued() {
             console.log('qued')
         },
-        error() {
+        error(player) {
             console.log('error');
+            // this.$store.commit('cantPlay', 'id');
+            this.playNext();
             this.updateStatus();
         },
 

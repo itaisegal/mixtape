@@ -8,7 +8,8 @@ export default new Vuex.Store({
         serverTimeOffset: null,
         station: null,
         fingerprint: null,
-        playerStatus: null
+        playerStatus: null,
+        cantPlay: {} //ids of videos that got an error when trying to play
     },
     mutations: {
         setStation: (state, station) => {
@@ -20,8 +21,11 @@ export default new Vuex.Store({
         setServerTimeOffset(state, offset) {
             state.serverTimeOffset = offset;
         },
-        updatePlayerStatus(state, status){
+        updatePlayerStatus(state, status) {
             state.playerStatus = status;
+        },
+        cantPlay(state, id) {
+            state.cantPlay[id] = true;
         }
     }
 });

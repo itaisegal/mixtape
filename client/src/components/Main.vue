@@ -5,16 +5,16 @@
                 <div class="wave"></div>
                 <div class="logo"></div>
             </div>
-    
+
             <div class="bottom">
                 <div class="buttons">
                     <div class="btn" id="createStation" @click="createStation">
                         Create Station
                     </div>
-    
+
                     <div class="btn" id="joinStation" @click="join">
                         Join Station
-                        <input type="text" v-model="stationId" maxlength="4" spellcheck="false"></input>
+                        <input type="text" v-model="stationId" maxlength="4" spellcheck="false" id="idInput"></input>
                     </div>
                 </div>
             </div>
@@ -25,7 +25,7 @@
                 station not found :(
             </div>
         </div>
-    
+
         <station v-show="$store.state.station"></station>
     </div>
 </template>
@@ -51,6 +51,16 @@ export default {
         if (this.$route.params.stationId && this.$route.params.stationId.length === 4) {
             this.joinStation(this.$route.params.stationId.toUpperCase());
         }
+    },
+
+    mounted() {
+        var that = this;
+        document.getElementById('idInput').onkeypress = function (e) {
+            // Enter pressed?
+            if (e.which == 10 || e.which == 13) {
+                that.join();
+            }
+        };
     },
 
     watch: {

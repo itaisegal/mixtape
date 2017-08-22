@@ -8,7 +8,7 @@
 
         <div v-if="$store.state.station">
             <h1 class="station-id">{{$store.state.station.id}}</h1>
-            <h1 class="station-title">{{$store.state.station.title}}</h1>
+            <h1 class="station-title" id="stationTitle">{{$store.state.station.title}}</h1>
         </div>
 
         <player class="player"></player>
@@ -32,13 +32,23 @@ export default {
         Playlist,
         Search
     },
+    data() {
+        return {
+            changeColorInterval: null
+        }
+    },
 
     created() {
-        console.log('station created')
+        console.log('station created');
+    },
+
+    mounted() {
+        this.changeColorInterval = setInterval(this.changeTitleColor, 2500);
     },
 
     beforeDestroy() {
         console.log('station before destroy');
+        clearInterval(this.changeColorInterval);
     },
 
     destroyed() {
@@ -53,6 +63,10 @@ export default {
     methods: {
         playSong(video) {
             EventBus.$emit('playSong', video);
+        },
+
+        changeTitleColor() {
+            document.getElementById('stationTitle').style.color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
         }
     }
 }
@@ -109,6 +123,9 @@ export default {
     margin: 0;
     margin-top: -2%;
 }
+
+
+
 
 
 
