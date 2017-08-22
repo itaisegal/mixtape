@@ -34,7 +34,7 @@ export default {
             activeVolume: 0,
             shadowVolume: 0,
             active: true,
-            currentVideo: null,
+            currentVideoIdx: null,
             startingNext: false
         }
     },
@@ -49,8 +49,8 @@ export default {
         this.activePlayerDiv.style.zIndex = 1;
 
         var that = this;
-        EventBus.$on('playSong', video => {
-            that.play(video);
+        EventBus.$on('playSong', idx => {
+            that.play(idx);
         });
 
         EventBus.$on('stop', () => {
@@ -76,7 +76,6 @@ export default {
             this.activePlayer = player;
             this.player2 = player;
 
-            debugger;
             var iframe = player.getIframe();
             iframe.style.width = '100vw';
             iframe.style.maxWidth = '640px'
@@ -158,10 +157,11 @@ export default {
 
             requestAnimationFrame(this.checkState);
         },
-        play(video) {
+        play(videoIdx) {
             debugger;
-            this.currentVideo = video;
-            this.shadowPlayer.loadVideoById(video.id.videoId);
+            this.currentVideoIdx = videoIdx;
+            var v = this.$store.state.station.playlist[videoIdx];
+            this.shadowPlayer.loadVideoById(v.id.videoId);
             this.shadowPlayerDiv.style.opacity = '0';
             this.updateStatus();
         },
@@ -172,12 +172,8 @@ export default {
         playNext() {
             debugger;
             var playlist = this.$store.state.station.playlist;
-            var that = this;
-            var idx = playlist.findIndex(function (item) {
-                return that.currentVideo === item;
-            });
-            if (playlist[idx + 1]) {
-                this.play(playlist[idx + 1]);
+            if (playlist[this.currentVideoIdx + 1]) {
+                this.play(this.currentVideoIdx + 1);
             } else {
                 this.startingNext = false;
             }

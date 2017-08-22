@@ -32,7 +32,6 @@ export default {
         var that = this;
         console.log(document.getElementsByTagName("BODY")[0]);
         document.getElementsByTagName("BODY")[0].click(function (e) {
-            debugger;
             if (e.target.id !== 'searchBar') {
                 that.close();
             }

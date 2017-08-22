@@ -1,6 +1,6 @@
 <template>
     <div class="playlist">
-        <PlaylistItem v-for="(item, idx) in playlist" :key="idx" :item="item" @playSong="playSong"></PlaylistItem>
+        <PlaylistItem v-for="(item, idx) in playlist" :key="idx" :idx="idx" :item="item" @playSong="playSong" @click="$emit('playSong', item)"></PlaylistItem>
     </div>
 </template>
 
@@ -44,7 +44,6 @@ export default {
 </script>
 
 <style scoped>
-
 .playlist {
     width: 100%;
 }

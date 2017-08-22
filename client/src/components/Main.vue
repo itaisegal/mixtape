@@ -96,7 +96,6 @@ export default {
 
     sockets: {
         setStation(station) {
-            debugger;
             console.log('set station:' + station);
             if (!station) {
                 console.log('station not found');
@@ -110,7 +109,6 @@ export default {
             }
         },
         stationCreated(stationId) {
-            debugger;
             this.$router.push('/' + stationId);
         }
     },
@@ -120,7 +118,6 @@ export default {
             this.$socket.emit('newStation', this.$store.state.fingerprint)
         },
         join() {
-            debugger;
             if (this.stationId.length === 4) {
                 this.$router.push('/' + this.stationId);
             }

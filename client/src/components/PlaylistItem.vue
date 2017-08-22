@@ -1,5 +1,5 @@
 <template>
-    <div class="main" @click="$emit('playSong', item)">
+    <div class="main" @click="$emit('playSong', idx)">
 
         <div class="thumbnail" :style="{ 'background-image' : 'url(' + item.snippet.thumbnails.default.url + ')' }"></div>
         <!-- -1 – unstarted
@@ -32,7 +32,7 @@
 <script>
 export default {
     name: 'PlaylistItem',
-    props: ['item']
+    props: ['item', 'idx']
 }
 </script>
 
@@ -65,7 +65,7 @@ export default {
 }
 
 .status-container {
-    width: 80px;
+    width: 70px;
     height: 100%;
     float: right;
 }
