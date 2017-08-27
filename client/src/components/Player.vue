@@ -159,6 +159,7 @@ export default {
         },
         play(videoIdx) {
             debugger;
+            console.log("videoIdx: "+videoIdx);
             this.currentVideoIdx = videoIdx;
             var v = this.$store.state.station.playlist[videoIdx];
             this.shadowPlayer.loadVideoById(v.id.videoId);
